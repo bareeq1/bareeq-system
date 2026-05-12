@@ -67,17 +67,6 @@
   [dir="rtl"] .hero__art-c { left: 0; width: 220px; height: 280px; }
 }
 
-/* cart drawer slides from the LEFT in RTL */
-[dir="rtl"] aside[style*="position: absolute"][style*="right: 0"] {
-  right: auto !important;
-  left: 0 !important;
-  border-left: none !important;
-  border-right: 1px solid var(--rule) !important;
-  transform: translateX(-100%);
-}
-[dir="rtl"] aside[style*="position: absolute"][style*="right: 0"][style*="translateX(0)"] {
-  transform: translateX(0) !important;
-}
 
 /* product modal close button flip */
 [dir="rtl"] button[aria-label="close"] { right: auto; left: 16px; }

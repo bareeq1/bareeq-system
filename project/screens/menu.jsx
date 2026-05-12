@@ -267,7 +267,8 @@ function ProductDetail({ item, onClose, onAdd }) {
 //  CART DRAWER
 // ============================================================
 function CartDrawer({ open, onClose, cart, setCart, go }) {
-  const { t } = useI18n();
+  const { lang, t } = useI18n();
+  const isRtl = lang === 'ar';
   const subtotal = cart.reduce((s, c) => s + (c.finalPrice || c.price) * c.qty, 0);
   const points = Math.floor(subtotal / 10);
   return (
@@ -283,10 +284,12 @@ function CartDrawer({ open, onClose, cart, setCart, go }) {
         transition: 'opacity .3s ease',
       }}/>
       <aside style={{
-        position: 'absolute', right: 0, top: 0, bottom: 0,
+        position: 'absolute',
+        ...(isRtl ? { left: 0 } : { right: 0 }),
+        top: 0, bottom: 0,
         width: 460, background: 'var(--paper)',
-        borderLeft: '1px solid var(--rule)',
-        transform: open ? 'translateX(0)' : 'translateX(100%)',
+        ...(isRtl ? { borderRight: '1px solid var(--rule)' } : { borderLeft: '1px solid var(--rule)' }),
+        transform: open ? 'translateX(0)' : (isRtl ? 'translateX(-100%)' : 'translateX(100%)'),
         transition: 'transform .35s cubic-bezier(.2,.7,.2,1)',
         display: 'flex', flexDirection: 'column',
       }}>
