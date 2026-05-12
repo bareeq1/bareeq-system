@@ -3,6 +3,7 @@
 // ============================================================
 
 function DashboardScreen({ go }) {
+  const { t } = useI18n();
   const [tab, setTab] = useState('overview');
   const favIds = ['pis','mdl','jml','tir'];
   const favorites = window.BAREEQ.ITEMS.filter(i => favIds.includes(i.id));
@@ -19,10 +20,10 @@ function DashboardScreen({ go }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
             <Ph tone="gold" label="" aspect="1" style={{ width: 78, height: 78, borderRadius: '50%' }} grain={false} />
             <div>
-              <Eyebrow gold>Welcome back · أهلًا</Eyebrow>
+              <Eyebrow gold>{t('dashboard.welcome')}</Eyebrow>
               <h1 className="serif" style={{ margin: '8px 0 4px', fontSize: 56, lineHeight: 1, letterSpacing: '-0.02em' }}>Yara H.</h1>
               <div style={{ display: 'flex', gap: 14, fontSize: 13, color: 'var(--ink-mute)', alignItems: 'center' }}>
-                <span>Gold member · since 2024</span>
+                <span>{t('dashboard.member')}</span>
                 <span style={{ color: 'var(--ink-faint)' }}>·</span>
                 <span className="mono" style={{ letterSpacing: '0.14em' }}>612 ✦</span>
               </div>
@@ -30,10 +31,10 @@ function DashboardScreen({ go }) {
           </div>
           <div style={{ display: 'flex', gap: 22 }}>
             {[
-              ['18', 'Orders'],
-              ['612', 'Sparkles'],
-              ['EGP 2,840', 'Saved'],
-              ['12', 'Day streak'],
+              ['18',       t('dashboard.orders')],
+              ['612',      t('dashboard.sparkles')],
+              ['EGP 2,840',t('dashboard.saved')],
+              ['12',       t('dashboard.streak')],
             ].map(([k,v]) => (
               <div key={v} style={{ textAlign: 'center', padding: '0 8px' }}>
                 <div className="serif" style={{ fontSize: 28, lineHeight: 1 }}>{k}</div>
@@ -48,12 +49,12 @@ function DashboardScreen({ go }) {
       <div style={{ borderBottom: '1px solid var(--rule)', background: 'var(--paper)' }}>
         <div className="wrap" style={{ display: 'flex', gap: 4, padding: '14px 32px' }}>
           {[
-            ['overview','Overview'],
-            ['orders','Order history'],
-            ['favorites','Favorites'],
-            ['addresses','Addresses'],
-            ['subscriptions','Subscriptions'],
-            ['settings','Settings'],
+            ['overview',      t('dashboard.tabs.overview')],
+            ['orders',        t('dashboard.tabs.orders')],
+            ['favorites',     t('dashboard.tabs.favorites')],
+            ['addresses',     t('dashboard.tabs.addresses')],
+            ['subscriptions', t('dashboard.tabs.subscriptions')],
+            ['settings',      t('dashboard.tabs.settings')],
           ].map(([id, label]) => (
             <button key={id} className="tab" data-active={tab === id} onClick={() => setTab(id)}>{label}</button>
           ))}
@@ -63,12 +64,12 @@ function DashboardScreen({ go }) {
       {/* CONTENT */}
       <section style={{ padding: '50px 0 120px' }}>
         <div className="wrap">
-          {tab === 'overview' && <Overview go={go} favorites={favorites} />}
-          {tab === 'orders' && <Orders />}
-          {tab === 'favorites' && <Favorites favorites={favorites} />}
-          {tab === 'addresses' && <Addresses addresses={addresses} />}
+          {tab === 'overview'      && <Overview go={go} favorites={favorites} />}
+          {tab === 'orders'        && <Orders />}
+          {tab === 'favorites'     && <Favorites favorites={favorites} />}
+          {tab === 'addresses'     && <Addresses addresses={addresses} />}
           {tab === 'subscriptions' && <Subscriptions />}
-          {tab === 'settings' && <Settings />}
+          {tab === 'settings'      && <Settings />}
         </div>
       </section>
 
@@ -78,13 +79,14 @@ function DashboardScreen({ go }) {
 }
 
 function Overview({ go, favorites }) {
+  const { t } = useI18n();
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 22 }}>
       {/* Recent orders */}
       <div className="card" style={{ padding: 32 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 22 }}>
-          <h3 className="serif" style={{ margin: 0, fontSize: 28 }}>Recent orders</h3>
-          <button className="btn btn--ghost btn--sm">See all</button>
+          <h3 className="serif" style={{ margin: 0, fontSize: 28 }}>{t('dashboard.recent')}</h3>
+          <button className="btn btn--ghost btn--sm">{t('common.viewAll')}</button>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {window.BAREEQ.ORDERS.slice(0,4).map((o, i) => (
@@ -103,7 +105,7 @@ function Overview({ go, favorites }) {
 
       {/* Wallet card */}
       <div className="card" style={{ padding: 32, background: 'var(--ink)', color: 'var(--ivory)', display: 'flex', flexDirection: 'column', gap: 18 }}>
-        <Eyebrow gold style={{ color: 'var(--gold)' }}>Rewards wallet</Eyebrow>
+        <Eyebrow gold style={{ color: 'var(--gold)' }}>{t('dashboard.wallet')}</Eyebrow>
         <div className="serif" style={{ fontSize: 72, lineHeight: 0.9, color: 'var(--gold)' }}>612<span style={{ fontSize: 24, opacity: 0.7 }}> ✦</span></div>
         <div style={{ fontSize: 13, color: 'rgba(255,240,225,.7)' }}>138 sparkles until VIP</div>
         <div style={{ height: 6, background: 'rgba(255,240,225,.15)', borderRadius: 999, overflow: 'hidden' }}>
@@ -119,7 +121,7 @@ function Overview({ go, favorites }) {
       {/* Favorites strip */}
       <div className="card" style={{ padding: 32, gridColumn: 'span 2' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 18 }}>
-          <h3 className="serif" style={{ margin: 0, fontSize: 28 }}>Reorder your usuals</h3>
+          <h3 className="serif" style={{ margin: 0, fontSize: 28 }}>{t('dashboard.reorder')}</h3>
           <span className="mono" style={{ fontSize: 11, color: 'var(--ink-faint)', letterSpacing: '0.16em' }}>4 SAVED</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
@@ -140,6 +142,7 @@ function Overview({ go, favorites }) {
 }
 
 function Orders() {
+  const { t } = useI18n();
   return (
     <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '110px 2fr 1fr 90px 90px 110px', padding: '14px 28px', background: 'var(--ivory-2)', borderBottom: '1px solid var(--rule)' }}>
@@ -165,13 +168,14 @@ function Favorites({ favorites }) {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 18 }}>
       {favorites.map(f => (
-        <ProductCard key={f.id} item={f} lang="en" onOpen={() => {}} onAdd={() => {}} />
+        <ProductCard key={f.id} item={f} onOpen={() => {}} onAdd={() => {}} />
       ))}
     </div>
   );
 }
 
 function Addresses({ addresses }) {
+  const { t } = useI18n();
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
       {addresses.map(a => (
@@ -181,8 +185,8 @@ function Addresses({ addresses }) {
           <h4 className="serif" style={{ margin: '10px 0 4px', fontSize: 24 }}>{a.label}</h4>
           <div style={{ fontSize: 13.5, color: 'var(--ink-mute)' }}>{a.detail}</div>
           <div style={{ display: 'flex', gap: 8, marginTop: 18 }}>
-            <button className="btn btn--ghost btn--sm">Edit</button>
-            <button className="btn btn--ghost btn--sm">Remove</button>
+            <button className="btn btn--ghost btn--sm">{t('common.edit')}</button>
+            <button className="btn btn--ghost btn--sm">{t('common.remove')}</button>
           </div>
         </div>
       ))}
@@ -197,10 +201,11 @@ function Addresses({ addresses }) {
 }
 
 function Subscriptions() {
+  const { t } = useI18n();
   const plans = [
-    { id: 'daily', label: 'The Daily', price: 1490, sub: 'A drink a day · pick 7 weekly favorites', perks: ['15% off all extras','Skip days anytime','Free pastry every 7th'] },
-    { id: 'beans', label: 'The Bean Drop', price: 890, sub: '250g specialty beans, monthly', perks: ['New origin each month','Tasting notes card','Free shipping'] },
-    { id: 'brewbar', label: 'The Brew Bar', price: 2200, sub: 'Eight pour-overs at the counter', perks: ['Reserved stool','Cupping invite','VIP shortcut'] },
+    { id: 'daily',   label: 'The Daily',    price: 1490, sub: 'A drink a day · pick 7 weekly favorites', perks: ['15% off all extras','Skip days anytime','Free pastry every 7th'] },
+    { id: 'beans',   label: 'The Bean Drop', price: 890,  sub: '250g specialty beans, monthly',           perks: ['New origin each month','Tasting notes card','Free shipping'] },
+    { id: 'brewbar', label: 'The Brew Bar',  price: 2200, sub: 'Eight pour-overs at the counter',         perks: ['Reserved stool','Cupping invite','VIP shortcut'] },
   ];
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
@@ -218,7 +223,7 @@ function Subscriptions() {
               <Price value={p.price} size={20} />
               <span className="mono" style={{ fontSize: 10.5, color: 'var(--ink-mute)', letterSpacing: '0.14em', marginLeft: 6 }}>/MO</span>
             </div>
-            <button className={i === 1 ? 'btn btn--gold btn--sm' : 'btn btn--ink btn--sm'}>Subscribe</button>
+            <button className={i === 1 ? 'btn btn--gold btn--sm' : 'btn btn--ink btn--sm'}>{t('common.subscribe')}</button>
           </div>
         </div>
       ))}
@@ -227,18 +232,24 @@ function Subscriptions() {
 }
 
 function Settings() {
+  const { t } = useI18n();
   return (
     <div className="card" style={{ padding: 36, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
       {[
-        ['Profile', ['Name · Yara H.','Email · yara@…com','Phone · +20 *** *** ****']],
-        ['Preferences', ['Default milk · Oat','Default size · Double','Sweetness · Less']],
+        ['Profile',       ['Name · Yara H.','Email · yara@…com','Phone · +20 *** *** ****']],
+        ['Preferences',   ['Default milk · Oat','Default size · Double','Sweetness · Less']],
         ['Notifications', ['New drops · On','Streak reminders · On','Coupons · Weekly']],
-        ['Privacy', ['Order history visible · Yes','Personalize offers · Yes','Marketing · Off']],
+        ['Privacy',       ['Order history visible · Yes','Personalize offers · Yes','Marketing · Off']],
       ].map(([h, items]) => (
         <div key={h}>
           <Eyebrow gold>{h}</Eyebrow>
           <ul style={{ listStyle: 'none', padding: 0, margin: '14px 0 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {items.map(i => <li key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13.5, paddingBottom: 12, borderBottom: '1px solid var(--rule)' }}><span>{i}</span><span style={{ color: 'var(--ink-mute)', fontSize: 12 }}>Edit</span></li>)}
+            {items.map(item => (
+              <li key={item} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13.5, paddingBottom: 12, borderBottom: '1px solid var(--rule)' }}>
+                <span>{item}</span>
+                <span style={{ color: 'var(--ink-mute)', fontSize: 12 }}>{t('common.edit')}</span>
+              </li>
+            ))}
           </ul>
         </div>
       ))}

@@ -3,8 +3,9 @@
 // ============================================================
 
 function RewardsScreen({ go }) {
+  const { lang, t } = useI18n();
   const points = 612;
-  const tier = window.BAREEQ.TIERS.find(t => points >= t.min && points < t.max) || window.BAREEQ.TIERS[0];
+  const tier = window.BAREEQ.TIERS.find(ti => points >= ti.min && points < ti.max) || window.BAREEQ.TIERS[0];
   const tierIdx = window.BAREEQ.TIERS.indexOf(tier);
   const nextTier = window.BAREEQ.TIERS[tierIdx + 1];
   const progress = ((points - tier.min) / (tier.max - tier.min)) * 100;
@@ -19,13 +20,13 @@ function RewardsScreen({ go }) {
         <div className="wrap-wide" style={{ position: 'relative' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 60, alignItems: 'center' }}>
             <div>
-              <Eyebrow gold style={{ color: 'var(--gold)' }}>Inner Circle · دائرة بريق</Eyebrow>
+              <Eyebrow gold style={{ color: 'var(--gold)' }}>{t('rewards.kicker')}</Eyebrow>
               <h1 className="serif" style={{ margin: '20px 0 0', fontSize: 96, lineHeight: 0.96, letterSpacing: '-0.02em', fontWeight: 400 }}>
-                Every sip<br/>
-                <em style={{ color: 'var(--gold)' }}>earns a sparkle.</em>
+                {t('rewards.title1')}<br/>
+                <em style={{ color: 'var(--gold)' }}>{t('rewards.title2')}</em>
               </h1>
               <p style={{ color: 'rgba(255,240,225,0.7)', maxWidth: 480, marginTop: 22, fontSize: 16, lineHeight: 1.6, textWrap: 'pretty' }}>
-                Four tiers — Bronze to VIP. Daily streaks, birthday gifts, surprise drops, and exclusive bean access for the inner circle.
+                {t('rewards.lead')}
               </p>
             </div>
 
@@ -35,7 +36,7 @@ function RewardsScreen({ go }) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
                     <Logo size={26} color="var(--ivory)" />
-                    <div className="mono" style={{ fontSize: 10, letterSpacing: '0.2em', opacity: 0.6, marginTop: 16 }}>MEMBER № 00428</div>
+                    <div className="mono" style={{ fontSize: 10, letterSpacing: '0.2em', opacity: 0.6, marginTop: 16 }}>{t('rewards.member')} № 00428</div>
                   </div>
                   <TierBadge tier={tier.id} size={56} />
                 </div>
@@ -43,7 +44,7 @@ function RewardsScreen({ go }) {
                   <div className="serif" style={{ fontSize: 56, lineHeight: 1, color: 'var(--gold)' }}>
                     {points} <span style={{ fontSize: 24, opacity: 0.7 }}>✦</span>
                   </div>
-                  <div className="mono" style={{ fontSize: 10.5, letterSpacing: '0.2em', opacity: 0.6, marginTop: 6 }}>SPARKLES · {tier.label.toUpperCase()}</div>
+                  <div className="mono" style={{ fontSize: 10.5, letterSpacing: '0.2em', opacity: 0.6, marginTop: 6 }}>{t('rewards.sparkles')} · {tier.label.toUpperCase()}</div>
                 </div>
                 <div style={{ marginTop: 22 }}>
                   <div style={{ height: 6, background: 'rgba(255,240,225,.15)', borderRadius: 999, overflow: 'hidden' }}>
@@ -68,26 +69,26 @@ function RewardsScreen({ go }) {
       {/* TIER LADDER */}
       <section style={{ padding: '90px 0', background: 'var(--ivory)' }}>
         <div className="wrap">
-          <SectionHeader kicker="Four tiers · أربع مراتب" title="Climb the circle." />
+          <SectionHeader kicker={t('rewards.tiersKicker')} title={t('rewards.tiersTitle')} />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-            {window.BAREEQ.TIERS.map((t, i) => {
-              const active = t.id === tier.id;
+            {window.BAREEQ.TIERS.map((ti, i) => {
+              const active = ti.id === tier.id;
               return (
-                <div key={t.id} className={active ? 'lux-border' : 'card'} style={{ padding: 28, minHeight: 360, display: 'flex', flexDirection: 'column', gap: 16, position: 'relative' }}>
-                  {active && <div style={{ position: 'absolute', top: 12, right: 12 }}><Tag tone="gold">You are here</Tag></div>}
+                <div key={ti.id} className={active ? 'lux-border' : 'card'} style={{ padding: 28, minHeight: 360, display: 'flex', flexDirection: 'column', gap: 16, position: 'relative' }}>
+                  {active && <div style={{ position: 'absolute', top: 12, right: 12 }}><Tag tone="gold">{t('common.you')}</Tag></div>}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <TierBadge tier={t.id} size={56} />
+                    <TierBadge tier={ti.id} size={56} />
                     <span className="mono" style={{ fontSize: 11, color: 'var(--ink-faint)', letterSpacing: '0.18em' }}>0{i+1}</span>
                   </div>
                   <div>
-                    <h3 className="serif" style={{ margin: 0, fontSize: 32, letterSpacing: '-0.01em' }}>{t.label}</h3>
+                    <h3 className="serif" style={{ margin: 0, fontSize: 32, letterSpacing: '-0.01em' }}>{ti.label}</h3>
                     <div className="mono" style={{ fontSize: 11, color: 'var(--ink-mute)', letterSpacing: '0.14em', marginTop: 6 }}>
-                      {t.min} – {t.max === 9999 ? '∞' : t.max} ✦
+                      {ti.min} – {ti.max === 9999 ? '∞' : ti.max} ✦
                     </div>
                   </div>
                   <Hair />
                   <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 9, fontSize: 13, color: 'var(--ink-soft)' }}>
-                    {t.perks.map(p => <li key={p} style={{ display: 'flex', gap: 8 }}><span style={{ color: 'var(--gold-deep)' }}>✦</span>{p}</li>)}
+                    {ti.perks.map(p => <li key={p} style={{ display: 'flex', gap: 8 }}><span style={{ color: 'var(--gold-deep)' }}>✦</span>{p}</li>)}
                   </ul>
                 </div>
               );
@@ -102,13 +103,13 @@ function RewardsScreen({ go }) {
           {/* STREAK */}
           <div className="card" style={{ padding: 36, display: 'flex', flexDirection: 'column', gap: 22 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Eyebrow gold>Daily streak · سلسلة</Eyebrow>
-              <span className="mono" style={{ fontSize: 11, color: 'var(--ink-mute)', letterSpacing: '0.2em' }}>RESETS AT 3AM</span>
+              <Eyebrow gold>{t('rewards.streakKicker')}</Eyebrow>
+              <span className="mono" style={{ fontSize: 11, color: 'var(--ink-mute)', letterSpacing: '0.2em' }}>{t('rewards.streakResets')}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 14 }}>
               <div className="serif" style={{ fontSize: 96, lineHeight: 0.9, letterSpacing: '-0.03em' }}>{streak}</div>
               <div>
-                <div className="serif" style={{ fontSize: 22 }}>days in a row</div>
+                <div className="serif" style={{ fontSize: 22 }}>{t('rewards.streakDays')}</div>
                 <div style={{ fontSize: 13, color: 'var(--ink-mute)', marginTop: 4 }}>3 more for the <strong style={{ color: 'var(--gold-deep)' }}>Fortnight Drop</strong> ✦</div>
               </div>
             </div>
@@ -137,9 +138,9 @@ function RewardsScreen({ go }) {
 
           {/* SPIN */}
           <div className="card" style={{ padding: 36, background: 'var(--burgundy)', color: 'var(--ivory)', display: 'flex', flexDirection: 'column', gap: 16, position: 'relative', overflow: 'hidden' }}>
-            <Eyebrow gold style={{ color: 'var(--gold)' }}>Spin & sip · لفّ</Eyebrow>
-            <div className="serif" style={{ fontSize: 38, lineHeight: 1.05 }}>One free spin today.</div>
-            <p style={{ color: 'rgba(255,240,225,0.7)', fontSize: 13.5, textWrap: 'pretty' }}>Win a discount, a sparkle bonus, or — if the wheel is kind — a bean drop.</p>
+            <Eyebrow gold style={{ color: 'var(--gold)' }}>{t('rewards.spinKicker')}</Eyebrow>
+            <div className="serif" style={{ fontSize: 38, lineHeight: 1.05 }}>{t('rewards.spinTitle')}</div>
+            <p style={{ color: 'rgba(255,240,225,0.7)', fontSize: 13.5, textWrap: 'pretty' }}>{t('rewards.spinLead')}</p>
             <div style={{ position: 'relative', width: 200, height: 200, margin: '8px auto 0' }}>
               <div style={{
                 width: '100%', height: '100%', borderRadius: '50%',
@@ -149,7 +150,7 @@ function RewardsScreen({ go }) {
               <div style={{ position: 'absolute', inset: '40%', borderRadius: '50%', background: 'var(--ink)', color: 'var(--gold)', display: 'grid', placeItems: 'center', fontFamily: 'var(--f-display)', fontSize: 14 }}>spin</div>
               <div style={{ position: 'absolute', top: -8, left: '50%', transform: 'translateX(-50%)', width: 0, height: 0, borderLeft: '8px solid transparent', borderRight: '8px solid transparent', borderTop: '14px solid var(--gold)' }} />
             </div>
-            <button className="btn btn--gold" style={{ marginTop: 6 }}>Spin the wheel</button>
+            <button className="btn btn--gold" style={{ marginTop: 6 }}>{t('rewards.spinCta')}</button>
           </div>
         </div>
       </section>
@@ -157,7 +158,7 @@ function RewardsScreen({ go }) {
       {/* ACHIEVEMENTS */}
       <section style={{ padding: '0 0 90px' }}>
         <div className="wrap">
-          <SectionHeader kicker="Achievements · أوسمة" title="Badges, earned by ritual." lead="Small honors for being a regular. Three more unlocked recently." />
+          <SectionHeader kicker={t('rewards.badgesKicker')} title={t('rewards.badgesTitle')} lead="Small honors for being a regular. Three more unlocked recently." />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
             {window.BAREEQ.BADGES.map(b => (
               <div key={b.id} className="card" style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 12, opacity: b.earned ? 1 : 0.55 }}>
@@ -185,7 +186,7 @@ function RewardsScreen({ go }) {
       {/* COUPONS WALLET */}
       <section style={{ background: 'var(--cream)', padding: '90px 0' }}>
         <div className="wrap">
-          <SectionHeader kicker="Wallet · محفظتك" title="Coupons clipped." lead="Personalized offers based on your taste. Tap to apply at checkout." />
+          <SectionHeader kicker={t('rewards.couponsKicker')} title={t('rewards.couponsTitle')} lead="Personalized offers based on your taste. Tap to apply at checkout." />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 18 }}>
             {window.BAREEQ.COUPONS.map(c => (
               <div key={c.id} style={{ display: 'flex', alignItems: 'stretch', gap: 0, borderRadius: 18, overflow: 'hidden', boxShadow: 'var(--shadow-soft)' }}>
@@ -207,7 +208,7 @@ function RewardsScreen({ go }) {
                   <div style={{ fontSize: 13, color: 'var(--ink-mute)', marginTop: 4, textWrap: 'pretty' }}>{c.sub}</div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 14 }}>
                     <span className="mono" style={{ fontSize: 10.5, color: 'var(--ink-faint)', letterSpacing: '0.14em' }}>{c.expiry}</span>
-                    <button className="btn btn--ghost btn--sm">Apply →</button>
+                    <button className="btn btn--ghost btn--sm">{t('common.apply')}</button>
                   </div>
                 </div>
               </div>
@@ -220,14 +221,16 @@ function RewardsScreen({ go }) {
       <section style={{ padding: '90px 0 120px' }}>
         <div className="wrap" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 36, alignItems: 'center' }}>
           <div>
-            <Eyebrow gold>Refer · ادعُ صديقًا</Eyebrow>
-            <h2 className="serif" style={{ fontSize: 64, margin: '20px 0', lineHeight: 1.02 }}>Bring a friend.<br/>Share the sparkle.</h2>
+            <Eyebrow gold>{t('rewards.referKicker')}</Eyebrow>
+            <h2 className="serif" style={{ fontSize: 64, margin: '20px 0', lineHeight: 1.02 }}>
+              {t('rewards.referTitle1')}<br/>{t('rewards.referTitle2')}
+            </h2>
             <p style={{ color: 'var(--ink-mute)', maxWidth: 440, fontSize: 15, textWrap: 'pretty' }}>
-              For every friend who joins and orders, you both get 50 sparkles. Three referrals = an exclusive Bean Drop invitation.
+              {t('rewards.referLead')}
             </p>
             <div style={{ display: 'flex', gap: 10, marginTop: 24, maxWidth: 440 }}>
               <input value="bareeq.app/YARA-42" readOnly style={{ flex: 1, padding: '14px 18px', borderRadius: 999, border: '1px solid var(--rule)', background: 'var(--paper)', fontFamily: 'var(--f-mono)', fontSize: 13 }} />
-              <button className="btn btn--ink">Copy</button>
+              <button className="btn btn--ink">{t('common.copy')}</button>
             </div>
           </div>
           <div className="card" style={{ padding: 36, background: 'var(--ink)', color: 'var(--ivory)' }}>

@@ -46,9 +46,10 @@ function Ph({ tone = '', label = '', radius = 12, aspect = '4 / 3', children, st
 
 // -------- Price tag --------
 function Price({ value, size = 14, soft }) {
+  const { t } = useI18n();
   return (
     <span className="mono" style={{ fontSize: size, color: soft ? 'var(--ink-mute)' : 'var(--ink)' }}>
-      <span style={{ fontSize: size*0.78, opacity: 0.7, marginRight: 2 }}>EGP</span>{Number(value).toFixed(0)}
+      <span style={{ fontSize: size*0.78, opacity: 0.7, marginRight: 2 }}>{t('common.currency')}</span>{Number(value).toFixed(0)}
     </span>
   );
 }
@@ -98,35 +99,35 @@ function SectionHeader({ kicker, title, lead, action, dark }) {
   );
 }
 
-// -------- Product card --------
-function ProductCard({ item, lang, onOpen, onAdd }) {
-  const showAr = lang === 'ar' || lang === 'bi';
-  const showEn = lang === 'en' || lang === 'bi';
+// -------- Product card — text only, no thumbnail --------
+function ProductCard({ item, onOpen, onAdd }) {
+  const { lang, t } = useI18n();
+  const showAr = lang === 'ar';
   return (
-    <div className="card card--hover" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-      <div onClick={() => onOpen(item)} style={{ cursor: 'pointer', position: 'relative' }}>
-        <Ph tone={item.tone} label={item.name} aspect="5 / 4" radius={0} />
+    <div
+      className="card card--hover"
+      style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', cursor: 'pointer' }}
+      onClick={() => onOpen(item)}
+    >
+      <div style={{ padding: '22px 20px 20px', display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
         {item.flag && (
-          <div style={{ position: 'absolute', top: 12, left: 12 }}>
+          <div>
             <Tag tone={item.flag === 'bestseller' ? 'gold' : item.flag === 'signature' ? 'burgundy' : 'ink'}>{item.flag}</Tag>
           </div>
         )}
-      </div>
-      <div style={{ padding: '16px 18px 18px', display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
-          <h3 className="serif" style={{ margin: 0, fontSize: 22, letterSpacing: '-0.01em', lineHeight: 1.1 }}>
-            {showEn && item.name}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
+          <h3 className="serif" style={{ margin: 0, fontSize: 22, letterSpacing: '-0.01em', lineHeight: 1.1, flex: 1 }}>
+            {showAr ? item.ar : item.name}
           </h3>
           <Price value={item.price} size={13} />
         </div>
-        {showAr && <div className="arabic" style={{ fontSize: 15, color: 'var(--ink-mute)', direction: 'rtl', textAlign: 'left' }}>{item.ar}</div>}
-        <p style={{ margin: '4px 0 12px', fontSize: 12.5, color: 'var(--ink-mute)', lineHeight: 1.5, textWrap: 'pretty', flex: 1 }}>{item.desc}</p>
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between', alignItems: 'center' }}>
+        <p style={{ margin: '2px 0 0', fontSize: 12.5, color: 'var(--ink-mute)', lineHeight: 1.5, textWrap: 'pretty', flex: 1 }}>{item.desc}</p>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
           {item.calories != null
-            ? <span className="mono" style={{ fontSize: 10, color: 'var(--ink-faint)', letterSpacing: '0.12em' }}>{item.calories} KCAL</span>
-            : <span className="mono" style={{ fontSize: 10, color: 'var(--ink-faint)', letterSpacing: '0.12em' }}>WHOLE BEAN</span>}
+            ? <span className="mono" style={{ fontSize: 10, color: 'var(--ink-faint)', letterSpacing: '0.12em' }}>{item.calories} {t('common.kcal')}</span>
+            : <span className="mono" style={{ fontSize: 10, color: 'var(--ink-faint)', letterSpacing: '0.12em' }}>{t('common.wholeBean')}</span>}
           <button className="btn btn--ink btn--sm" onClick={(e) => { e.stopPropagation(); onAdd(item); }}>
-            Add <span style={{ fontFamily: 'var(--f-mono)', opacity: 0.7 }}>+</span>
+            {t('common.addToCart')} <span style={{ fontFamily: 'var(--f-mono)', opacity: 0.7 }}>+</span>
           </button>
         </div>
       </div>
