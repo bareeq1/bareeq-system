@@ -131,12 +131,12 @@ function HomeScreen({
       lineHeight: 1.1,
       marginTop: 2
     }
-  }, "Pistachio Latte"), /*#__PURE__*/React.createElement("div", {
+  }, "Fruity Ice Chocolate"), /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 2
     }
   }, /*#__PURE__*/React.createElement(Price, {
-    value: 130,
+    value: 120,
     size: 11
   })))))), /*#__PURE__*/React.createElement("div", {
     className: "hero__corner-tl"
