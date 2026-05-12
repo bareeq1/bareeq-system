@@ -13,6 +13,6 @@ for src in \
   project/tweaks-panel.jsx \
   project/app.jsx; do
   out="${src%.jsx}.js"
-  npx babel "$src" -o "$out" && echo "✓ $out"
+  ./node_modules/.bin/babel "$src" -o "$out" && echo "✓ $out"
 done
 echo "Build complete."
