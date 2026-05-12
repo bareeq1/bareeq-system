@@ -58,8 +58,8 @@ function HomeScreen({ go, addToCart, openProduct }) {
               <img src="images/hero-chip.jpg" alt="" style={{ width: 48, height: 48, borderRadius: 10, objectFit: 'cover', flexShrink: 0, display: 'block', background: 'oklch(0.72 0.10 20)' }} />
               <div>
                 <div className="eyebrow eyebrow-g">Bestseller</div>
-                <div className="serif" style={{ fontSize: 17, lineHeight: 1.1, marginTop: 2 }}>Pistachio Latte</div>
-                <div style={{ marginTop: 2 }}><Price value={130} size={11} /></div>
+                <div className="serif" style={{ fontSize: 17, lineHeight: 1.1, marginTop: 2 }}>Fruity Ice Chocolate</div>
+                <div style={{ marginTop: 2 }}><Price value={120} size={11} /></div>
               </div>
             </div>
           </div>
