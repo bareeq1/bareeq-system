@@ -49,7 +49,7 @@ function HomeScreen({ go, addToCart, openProduct }) {
               <img src="images/hero-a.jpg" alt="Bareeq hibiscus drink" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
             <div className="hero__art-b" style={{ background: 'oklch(0.88 0.025 75)' }}>
-              <img src="images/hero-b.jpg" alt="Bareeq signature strawberry drink" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <img src="images/hero-b.jpg" alt="Bareeq signature strawberry drink" fetchpriority="high" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
             <div className="hero__art-c" style={{ background: 'oklch(0.68 0.09 72)' }}>
               <img src="images/hero-c.jpg" alt="Bareeq hot chocolate" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
@@ -123,7 +123,7 @@ function HomeScreen({ go, addToCart, openProduct }) {
             </div>
           </div>
           <div style={{ position: 'relative', height: 540, background: 'oklch(0.18 0.02 40)', borderRadius: 6, overflow: 'hidden' }}>
-            <img src="images/brew-bar.jpg" alt="Barista crafting V60 pour-over at Bareeq" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', borderRadius: 6, display: 'block' }} />
+            <img src="images/brew-bar.jpg" alt="Barista crafting V60 pour-over at Bareeq" loading="lazy" width="660" height="540" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', borderRadius: 6, display: 'block' }} />
             <div style={{ position: 'absolute', bottom: 24, left: 24, right: 24, color: 'var(--ivory)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
               <div className="mono" style={{ fontSize: 10, letterSpacing: '0.22em', opacity: 0.65 }}>BARISTA · 04:00</div>
               <div className="mono" style={{ fontSize: 10, letterSpacing: '0.22em', opacity: 0.65 }}>92° · 18G · 240ML</div>

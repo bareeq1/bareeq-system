@@ -81,10 +81,12 @@ function App() {
       </nav>
 
       {/* SCREENS */}
-      {screen === 'home'      && <HomeScreen go={setScreen} addToCart={addToCart} openProduct={openProduct} />}
-      {screen === 'menu'      && <MenuScreen go={setScreen} addToCart={addToCart} openProduct={openProduct} cart={cart} />}
-      {screen === 'rewards'   && <RewardsScreen go={setScreen} />}
-      {screen === 'dashboard' && <DashboardScreen go={setScreen} />}
+      <main>
+        {screen === 'home'      && <HomeScreen go={setScreen} addToCart={addToCart} openProduct={openProduct} />}
+        {screen === 'menu'      && <MenuScreen go={setScreen} addToCart={addToCart} openProduct={openProduct} cart={cart} />}
+        {screen === 'rewards'   && <RewardsScreen go={setScreen} />}
+        {screen === 'dashboard' && <DashboardScreen go={setScreen} />}
+      </main>
 
       {/* CART DRAWER (global) */}
       <CartDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} cart={cart} setCart={setCart} go={setScreen} />
