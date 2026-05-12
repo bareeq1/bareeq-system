@@ -45,11 +45,17 @@ function HomeScreen({ go, addToCart, openProduct }) {
 
           {/* hero composition — collage on desktop, single panel on mobile */}
           <div className="hero__art">
-            <div className="hero__art-a"><Ph tone="coffee" label="hero · espresso pour" aspect="auto" radius={4} style={{ height: '100%' }} /></div>
-            <div className="hero__art-b"><Ph tone="cream" label="hero · pistachio latte" aspect="auto" radius={4} style={{ height: '100%' }} /></div>
-            <div className="hero__art-c"><Ph tone="gold" label="hero · medjool dates" aspect="auto" radius={4} style={{ height: '100%' }} /></div>
+            <div className="hero__art-a">
+              <img src="images/hero-a.jpg" alt="Bareeq hibiscus drink" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            </div>
+            <div className="hero__art-b">
+              <img src="images/hero-b.jpg" alt="Bareeq signature strawberry drink" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            </div>
+            <div className="hero__art-c">
+              <img src="images/hero-c.jpg" alt="Bareeq hot chocolate" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            </div>
             <div className="hero__chip">
-              <div className="ph ph--pistachio" style={{ width: 48, height: 48, borderRadius: 10, flexShrink: 0 }}></div>
+              <img src="images/hero-chip.jpg" alt="" style={{ width: 48, height: 48, borderRadius: 10, objectFit: 'cover', flexShrink: 0, display: 'block' }} />
               <div>
                 <div className="eyebrow eyebrow-g">Bestseller</div>
                 <div className="serif" style={{ fontSize: 17, lineHeight: 1.1, marginTop: 2 }}>Pistachio Latte</div>
@@ -117,7 +123,7 @@ function HomeScreen({ go, addToCart, openProduct }) {
             </div>
           </div>
           <div style={{ position: 'relative', height: 540 }}>
-            <Ph tone="coffee" label="brew bar · aeropress pour" radius={6} style={{ position: 'absolute', inset: 0, height: '100%' }} grain={false} />
+            <img src="images/brew-bar.jpg" alt="Barista crafting V60 pour-over at Bareeq" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', borderRadius: 6, display: 'block' }} />
             <div style={{ position: 'absolute', bottom: 24, left: 24, right: 24, color: 'var(--ivory)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
               <div className="mono" style={{ fontSize: 10, letterSpacing: '0.22em', opacity: 0.65 }}>BARISTA · 04:00</div>
               <div className="mono" style={{ fontSize: 10, letterSpacing: '0.22em', opacity: 0.65 }}>92° · 18G · 240ML</div>
