@@ -1,0 +1,55 @@
+// ============================================================
+//  Bareeq · i18n — lightweight translation system
+// ============================================================
+
+const EN = {"meta":{"title":"Bareeq | A glow in every sip","description":"Specialty Egyptian coffee, slowly brewed in Helwan."},"nav":{"home":"Home","menu":"Menu","rewards":"Rewards","account":"Account","cart":"Cart","wishlist":"Wishlist","order":"Order →","language":"العربية"},"common":{"addToCart":"Add","viewAll":"See all","seeMenu":"See full menu →","apply":"Apply →","copy":"Copy","edit":"Edit","remove":"Remove","subscribe":"Subscribe","browse":"Browse menu →","checkout":"Checkout →","search":"Search the menu","currency":"EGP","kcal":"KCAL","wholeBean":"WHOLE BEAN","items":"ITEMS","empty":"Your cart is empty.","you":"You are here","scroll":"↓ SCROLL"},"hero":{"eyebrow":"Helwan · Est. 2023 · Specialty roastery","title1":"A glow","title2":"in every","title3":"sip.","tagline":"بريق في كل رشفة","lead":"Specialty Egyptian café culture, brewed slowly. From Medjool dates to ceremonial matcha — every drink is composed, never assembled.","ctaOrder":"Order now","ctaJoin":"Join the Inner Circle","statsA":"Signature drinks","statsB":"Single-origin beans","statsC":"Open daily"},"home":{"featuredKicker":"The Bareeq Six","featuredTitle":"A short menu of our quietest obsessions.","featuredLead":"Drinks we keep returning to. Six of forty-eight, chosen by the barista team this month.","brewKicker":"The Brew Bar","brewTitle1":"Four minutes,","brewTitle2":"one origin, one cup.","brewLead":"Aeropress, V60 and ceremonial matcha — reserve a stool at the counter and watch your cup composed in real time.","loyaltyKicker":"Inner Circle","loyaltyTitle":"A loyalty programme that earns its name.","loyaltyLead":"Earn a sparkle on every order. Climb four tiers from Bronze to VIP.","loyaltyCta":"See the tiers →","testimonialsKicker":"What guests say","testimonialsTitle":"Reviews from the regulars."},"menu":{"kicker":"The Menu","title1":"Forty-eight reasons","title2":"to come back.","edition":"EDITION · SS 26","sortCurated":"Curated","sortLow":"Price · low to high","sortHigh":"Price · high to low","sortCal":"Calories · light first","all":"All","noResults":"Nothing matches"},"product":{"ingredients":"Ingredients","size":"Size","milk":"Milk","addons":"Add a touch","notes":"Barista notes","notesPlaceholder":"Less sweet, extra hot…","pairs":"Pairs well with","addToCart":"Add to cart"},"cart":{"eyebrow":"Your order","title":"The Cart","subtotal":"Subtotal","delivery":"Delivery","free":"FREE","total":"Total","earn":"You'll earn","sparkles":"sparkles","toSilver":"to Silver"},"rewards":{"kicker":"Inner Circle","title1":"Every sip","title2":"earns a sparkle.","lead":"Four tiers — Bronze to VIP. Daily streaks, birthday gifts, surprise drops, and exclusive bean access for the inner circle.","member":"MEMBER","sparkles":"SPARKLES","tiersKicker":"Four tiers","tiersTitle":"Climb the circle.","streakKicker":"Daily streak","streakResets":"RESETS AT 3AM","streakDays":"days in a row","spinKicker":"Spin & sip","spinTitle":"One free spin today.","spinLead":"Win a discount, a sparkle bonus, or — if the wheel is kind — a bean drop.","spinCta":"Spin the wheel","badgesKicker":"Achievements","badgesTitle":"Badges, earned by ritual.","couponsKicker":"Wallet","couponsTitle":"Coupons clipped.","referKicker":"Refer a friend","referTitle1":"Bring a friend.","referTitle2":"Share the sparkle.","referLead":"For every friend who joins and orders, you both get 50 sparkles."},"dashboard":{"welcome":"Welcome back","member":"Gold member · since 2024","orders":"Orders","sparkles":"Sparkles","saved":"Saved","streak":"Day streak","tabs":{"overview":"Overview","orders":"Order history","favorites":"Favorites","addresses":"Addresses","subscriptions":"Subscriptions","settings":"Settings"},"recent":"Recent orders","wallet":"Rewards wallet","reorder":"Reorder your usuals"},"footer":{"tagline":"Bareeq specialty coffee, Helwan. A glow in every sip.","order":"Order","circle":"Inner Circle","visit":"Visit","rights":"© 2026 BAREEQ · ALL RIGHTS RESERVED","location":"HELWAN · EGYPT"}};
+
+const AR = {"meta":{"title":"بريق | بريق في كل رشفة","description":"قهوة مختصة مصرية، تُحضَّر بتمهّل في حلوان."},"nav":{"home":"الرئيسية","menu":"القائمة","rewards":"المكافآت","account":"حسابي","cart":"السلة","wishlist":"المفضلة","order":"اطلب الآن ←","language":"EN"},"common":{"addToCart":"أضف","viewAll":"عرض الكل","seeMenu":"← القائمة كاملة","apply":"← استخدم","copy":"نسخ","edit":"تعديل","remove":"حذف","subscribe":"اشترك","browse":"← تصفّح القائمة","checkout":"← إتمام الطلب","search":"ابحث في القائمة","currency":"ج.م","kcal":"سعرة","wholeBean":"بُن كامل","items":"صنفًا","empty":"سلتك فارغة.","you":"أنت هنا","scroll":"↓ مرّر"},"hero":{"eyebrow":"حلوان · تأسست ٢٠٢٣ · محمصة مختصة","title1":"بريقٌ","title2":"في كلِّ","title3":"رشفة.","tagline":"A glow in every sip","lead":"ثقافة قهوة مختصة من مصر، تُحضَّر على مهل. من تمر المجدول إلى الماتشا الاحتفالية — كلّ مشروب يُصاغ بإتقان، لا يُجمَع.","ctaOrder":"اطلب الآن","ctaJoin":"انضم لدائرة بريق","statsA":"مشروب مميّز","statsB":"حبوب مصدر واحد","statsC":"مفتوح يوميًا"},"home":{"featuredKicker":"ستة بريق","featuredTitle":"قائمة مختصرة من مفضّلاتنا الهادئة.","featuredLead":"مشروبات نعود إليها دائمًا. ستة من ثمانية وأربعين، اختارها فريق الباريستا هذا الشهر.","brewKicker":"غرفة التحضير","brewTitle1":"أربع دقائق،","brewTitle2":"مصدرٌ واحد، فنجانٌ واحد.","brewLead":"إيروبريس، V60، وماتشا احتفالية — احجز مقعدًا عند الكاونتر وشاهد فنجانك يُحضَّر أمامك.","loyaltyKicker":"دائرة بريق","loyaltyTitle":"برنامج ولاء يستحقّ اسمه.","loyaltyLead":"اكسب بريقًا مع كلّ طلب. أربع مراتب من البرونزية إلى VIP.","loyaltyCta":"← شاهد المراتب","testimonialsKicker":"آراء الضيوف","testimonialsTitle":"شهادات من رواد المقهى."},"menu":{"kicker":"القائمة","title1":"ثمانيةٌ وأربعون سببًا","title2":"للعودة.","edition":"إصدار · ربيع ٢٦","sortCurated":"مُختار","sortLow":"السعر · من الأقل","sortHigh":"السعر · من الأعلى","sortCal":"السعرات · الأخف أولًا","all":"الكل","noResults":"لا توجد نتائج لـ"},"product":{"ingredients":"المكوّنات","size":"الحجم","milk":"الحليب","addons":"إضافات","notes":"ملاحظات للباريستا","notesPlaceholder":"أقل تحلية، أكثر سخونة…","pairs":"يُقدَّم مع","addToCart":"أضف إلى السلة"},"cart":{"eyebrow":"طلبك","title":"السلة","subtotal":"المجموع الفرعي","delivery":"التوصيل","free":"مجاني","total":"الإجمالي","earn":"ستكسب","sparkles":"بريق","toSilver":"حتى الفضّية"},"rewards":{"kicker":"دائرة بريق","title1":"كل رشفة","title2":"تكسبك بريقًا.","lead":"أربع مراتب من البرونزية إلى VIP. سلاسل يومية، هدايا أعياد ميلاد، مفاجآت، وحبوب حصرية لأعضاء الدائرة.","member":"عضو رقم","sparkles":"بريق","tiersKicker":"أربع مراتب","tiersTitle":"ارتقِ بالدائرة.","streakKicker":"سلسلة يومية","streakResets":"تتجدد ٣ صباحًا","streakDays":"أيام متتالية","spinKicker":"لُفّ واشرب","spinTitle":"لفّة مجانية اليوم.","spinLead":"اربح خصمًا، رصيد بريق إضافي، أو — إن حالفك الحظ — حبوب مجانية.","spinCta":"لُفّ العجلة","badgesKicker":"الإنجازات","badgesTitle":"شارات تُكتسب بالعادة.","couponsKicker":"محفظتك","couponsTitle":"كوبوناتك.","referKicker":"ادعُ صديقًا","referTitle1":"ادعُ صديقًا.","referTitle2":"شاركه البريق.","referLead":"عن كل صديق ينضم ويطلب، تحصلان معًا على ٥٠ بريقًا."},"dashboard":{"welcome":"أهلًا بعودتك","member":"عضو ذهبي · منذ ٢٠٢٤","orders":"طلب","sparkles":"بريق","saved":"وفّرت","streak":"يوم متتالٍ","tabs":{"overview":"نظرة عامة","orders":"سجل الطلبات","favorites":"المفضلة","addresses":"العناوين","subscriptions":"الاشتراكات","settings":"الإعدادات"},"recent":"أحدث الطلبات","wallet":"محفظة المكافآت","reorder":"أعد طلب مشروباتك المعتادة"},"footer":{"tagline":"بريق للقهوة المختصة، حلوان. بريقٌ في كلّ رشفة.","order":"اطلب","circle":"دائرة بريق","visit":"زرنا","rights":"© ٢٠٢٦ بريق · جميع الحقوق محفوظة","location":"حلوان · مصر"}};
+
+const I18N = { en: EN, ar: AR };
+
+// detect default
+function detectLang() {
+  try {
+    const saved = localStorage.getItem('bareeq.lang');
+    if (saved === 'en' || saved === 'ar') return saved;
+  } catch {}
+  const browser = (navigator.language || 'en').toLowerCase();
+  return browser.startsWith('ar') ? 'ar' : 'en';
+}
+
+const LangCtx = React.createContext({ lang: 'en', t: (k) => k, setLang: () => {} });
+
+function LangProvider({ children }) {
+  const [lang, setLangState] = React.useState(detectLang);
+
+  React.useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.title = I18N[lang].meta.title;
+    try { localStorage.setItem('bareeq.lang', lang); } catch {}
+  }, [lang]);
+
+  const setLang = (l) => setLangState(l);
+  const toggle = () => setLangState(l => l === 'en' ? 'ar' : 'en');
+
+  const t = React.useCallback((path, fallback) => {
+    const parts = path.split('.');
+    let cur = I18N[lang];
+    for (const p of parts) {
+      if (cur && typeof cur === 'object' && p in cur) cur = cur[p];
+      else return fallback !== undefined ? fallback : path;
+    }
+    return cur;
+  }, [lang]);
+
+  return (
+    <LangCtx.Provider value={{ lang, t, setLang, toggle }}>
+      {children}
+    </LangCtx.Provider>
+  );
+}
+
+function useI18n() { return React.useContext(LangCtx); }
+
+Object.assign(window, { LangProvider, LangCtx, useI18n, I18N });

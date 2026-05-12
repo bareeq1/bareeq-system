@@ -1,0 +1,119 @@
+/* ============================================================
+   Bareeq · RTL support
+   ============================================================ */
+
+[dir="rtl"] body,
+[dir="rtl"] .arabic,
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3, [dir="rtl"] h4, [dir="rtl"] p, [dir="rtl"] li, [dir="rtl"] span:not(.mono):not(.eyebrow):not(.kicker):not(.glyph), [dir="rtl"] div, [dir="rtl"] button, [dir="rtl"] input, [dir="rtl"] textarea, [dir="rtl"] select, [dir="rtl"] a {
+  font-family: var(--f-arabic), var(--f-body) !important;
+}
+
+[dir="rtl"] .mono,
+[dir="rtl"] .eyebrow,
+[dir="rtl"] .kicker {
+  font-family: var(--f-mono) !important;
+}
+
+[dir="rtl"] .serif {
+  font-family: var(--f-arabic) !important;
+  letter-spacing: 0 !important;
+}
+
+/* keep numbers and Latin readable */
+[dir="rtl"] .ltr,
+[dir="rtl"] .mono,
+[dir="rtl"] [data-keep-ltr] {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* line-height for Arabic */
+[dir="rtl"] {
+  line-height: 1.65;
+}
+[dir="rtl"] .hero__title { line-height: 1.05 !important; }
+[dir="rtl"] h1, [dir="rtl"] h2 { line-height: 1.15 !important; }
+
+/* flip arrows */
+[dir="rtl"] .flip-x { transform: scaleX(-1); display: inline-block; }
+
+/* nav alignment */
+[dir="rtl"] .topnav__inner { direction: rtl; }
+[dir="rtl"] .topnav__center,
+[dir="rtl"] .topnav__right { flex-direction: row; }
+
+/* mobile bottom nav RTL */
+[dir="rtl"] .mobile-bottom-nav { direction: rtl; }
+
+/* hero corners flip */
+[dir="rtl"] .hero__corner-tl { right: auto; left: 28px; text-align: left; }
+[dir="rtl"] .hero__corner-br { right: auto; left: 28px; }
+@media (min-width: 1280px) {
+  [dir="rtl"] .hero__corner-tl { left: 40px; }
+  [dir="rtl"] .hero__corner-br { left: 40px; }
+}
+
+/* hero art: mirror positions */
+[dir="rtl"] .hero__art-a { right: auto; left: 20px; transform: rotate(4deg); }
+[dir="rtl"] .hero__art-b { right: auto; left: 140px; transform: rotate(-2deg); }
+[dir="rtl"] .hero__art-c { right: auto; left: 0; transform: rotate(-6deg); }
+[dir="rtl"] .hero__chip { left: auto; right: 0; }
+@media (max-width: 767px) {
+  [dir="rtl"] .hero__chip { left: auto; right: 12px; }
+}
+@media (min-width: 1280px) {
+  [dir="rtl"] .hero__art-a { left: 40px; width: 260px; height: 340px; }
+  [dir="rtl"] .hero__art-b { left: 220px; width: 320px; height: 420px; }
+  [dir="rtl"] .hero__art-c { left: 0; width: 220px; height: 280px; }
+}
+
+/* cart drawer slides from the LEFT in RTL */
+[dir="rtl"] aside[style*="position: absolute"][style*="right: 0"] {
+  right: auto !important;
+  left: 0 !important;
+  border-left: none !important;
+  border-right: 1px solid var(--rule) !important;
+  transform: translateX(-100%);
+}
+[dir="rtl"] aside[style*="position: absolute"][style*="right: 0"][style*="translateX(0)"] {
+  transform: translateX(0) !important;
+}
+
+/* product modal close button flip */
+[dir="rtl"] button[aria-label="close"] { right: auto; left: 16px; }
+
+/* search input icon flip */
+[dir="rtl"] input[placeholder] + span,
+[dir="rtl"] div[style*="position: relative"] > span[style*="left: 16px"] {
+  left: auto !important;
+  right: 16px;
+}
+[dir="rtl"] input[placeholder] {
+  padding-left: 16px !important;
+  padding-right: 42px !important;
+  text-align: right;
+}
+
+/* tables alignment */
+[dir="rtl"] .card > div[style*="grid-template-columns"] { direction: rtl; text-align: right; }
+
+/* eyebrow flip — hairline switches side */
+[dir="rtl"] .eyebrow > span:first-child { order: 2; }
+
+/* section header action stays trailing */
+[dir="rtl"] div[style*="justify-content: space-between"] { direction: rtl; }
+
+/* footer columns RTL */
+[dir="rtl"] footer .wrap { direction: rtl; text-align: right; }
+
+/* dot badge on cart icon flips */
+[dir="rtl"] .icon-btn > span[style*="right: -4px"] {
+  right: auto !important;
+  left: -4px;
+}
+
+/* arabic display feels tighter — relax tracking */
+[dir="rtl"] .hero__title { font-weight: 500; }
+
+/* selects: arrow stays right in RTL too (native), keep padding */
+[dir="rtl"] select { padding-right: 16px; padding-left: 32px; background-position: left 12px center; }
