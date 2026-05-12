@@ -545,11 +545,18 @@ function Footer({
   const {
     t
   } = useI18n();
+  const socials = [{
+    label: 'IG',
+    href: 'https://www.instagram.com/bareeq.eg__'
+  }, {
+    label: 'FB',
+    href: 'https://www.facebook.com/bareeq.egy/'
+  }];
   return /*#__PURE__*/React.createElement("footer", {
     style: {
       background: 'var(--ink)',
       color: 'var(--ivory)',
-      padding: '80px 0 40px'
+      padding: '80px 0 0'
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "wrap",
@@ -576,8 +583,14 @@ function Footer({
       gap: 10,
       marginTop: 22
     }
-  }, ['IG', 'FB', 'WA', 'TT'].map(s => /*#__PURE__*/React.createElement("span", {
-    key: s,
+  }, socials.map(({
+    label,
+    href
+  }) => /*#__PURE__*/React.createElement("a", {
+    key: label,
+    href: href,
+    target: "_blank",
+    rel: "noopener noreferrer",
     style: {
       width: 36,
       height: 36,
@@ -586,9 +599,20 @@ function Footer({
       display: 'grid',
       placeItems: 'center',
       fontFamily: 'var(--f-mono)',
-      fontSize: 10.5
+      fontSize: 10.5,
+      color: 'var(--ivory)',
+      textDecoration: 'none',
+      transition: 'border-color .2s, background .2s'
+    },
+    onMouseEnter: e => {
+      e.currentTarget.style.borderColor = 'var(--gold)';
+      e.currentTarget.style.background = 'rgba(255,240,225,0.08)';
+    },
+    onMouseLeave: e => {
+      e.currentTarget.style.borderColor = 'rgba(255,240,225,0.2)';
+      e.currentTarget.style.background = 'transparent';
     }
-  }, s)))), [[t('footer.order'), ['Full menu', 'Brew bar', 'Coffee beans', 'Catering']], [t('footer.circle'), ['Loyalty tiers', 'Rewards wallet', 'Refer a friend', 'VIP']], [t('footer.visit'), ['Helwan branch', 'Hours · 7AM — 1AM', 'Mostafa Safwat St', '+20 ** *** ****']]].map(([h, items]) => /*#__PURE__*/React.createElement("div", {
+  }, label)))), [[t('footer.order'), ['Full menu', 'Brew bar', 'Coffee beans', 'Catering']], [t('footer.circle'), ['Loyalty tiers', 'Rewards wallet', 'Refer a friend', 'VIP']]].map(([h, items]) => /*#__PURE__*/React.createElement("div", {
     key: h
   }, /*#__PURE__*/React.createElement("div", {
     className: "eyebrow eyebrow-g",
@@ -610,16 +634,60 @@ function Footer({
       color: 'rgba(255,240,225,0.7)',
       fontSize: 14
     }
-  }, i)))))), /*#__PURE__*/React.createElement("div", {
+  }, i))))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "eyebrow eyebrow-g",
+    style: {
+      color: 'var(--gold)'
+    }
+  }, t('footer.visit')), /*#__PURE__*/React.createElement("ul", {
+    style: {
+      listStyle: 'none',
+      padding: 0,
+      margin: '18px 0 0',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("li", {
+    style: {
+      color: 'rgba(255,240,225,0.7)',
+      fontSize: 14
+    }
+  }, "Helwan branch"), /*#__PURE__*/React.createElement("li", {
+    style: {
+      color: 'rgba(255,240,225,0.7)',
+      fontSize: 14
+    }
+  }, "Hours \xB7 7AM \u2014 1AM"), /*#__PURE__*/React.createElement("li", {
+    style: {
+      color: 'rgba(255,240,225,0.7)',
+      fontSize: 14
+    }
+  }, "Mostafa Safwat St"), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
+    href: "tel:+201110387361",
+    style: {
+      color: 'rgba(255,240,225,0.7)',
+      fontSize: 14,
+      textDecoration: 'none',
+      fontFamily: 'var(--f-mono)',
+      letterSpacing: '0.06em'
+    },
+    onMouseEnter: e => e.currentTarget.style.color = 'var(--gold)',
+    onMouseLeave: e => e.currentTarget.style.color = 'rgba(255,240,225,0.7)'
+  }, "+20 111 038 7361"))))), /*#__PURE__*/React.createElement("div", {
     className: "wrap",
+    style: {
+      paddingTop: 24,
+      borderTop: '1px solid rgba(255,240,225,0.1)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      paddingTop: 24,
-      borderTop: '1px solid rgba(255,240,225,0.1)',
       color: 'rgba(255,240,225,0.45)',
-      fontSize: 12
+      fontSize: 12,
+      paddingBottom: 20
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "mono",
@@ -631,7 +699,35 @@ function Footer({
     style: {
       letterSpacing: '0.2em'
     }
-  }, t('footer.location'))));
+  }, t('footer.location'))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingBottom: 24,
+      textAlign: 'center',
+      fontSize: 11,
+      color: 'rgba(255,240,225,0.25)',
+      fontFamily: 'var(--f-mono)',
+      letterSpacing: '0.14em'
+    }
+  }, "CRAFTED BY", ' ', /*#__PURE__*/React.createElement("a", {
+    href: "https://gamal.vercel.app",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    style: {
+      color: 'rgba(255,240,225,0.45)',
+      textDecoration: 'none',
+      borderBottom: '1px solid rgba(255,240,225,0.2)',
+      paddingBottom: 1,
+      transition: 'color .2s, border-color .2s'
+    },
+    onMouseEnter: e => {
+      e.currentTarget.style.color = 'var(--gold)';
+      e.currentTarget.style.borderColor = 'var(--gold)';
+    },
+    onMouseLeave: e => {
+      e.currentTarget.style.color = 'rgba(255,240,225,0.45)';
+      e.currentTarget.style.borderColor = 'rgba(255,240,225,0.2)';
+    }
+  }, "GAMAL"))));
 }
 Object.assign(window, {
   HomeScreen,
