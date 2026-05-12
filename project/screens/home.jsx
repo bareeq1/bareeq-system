@@ -45,17 +45,17 @@ function HomeScreen({ go, addToCart, openProduct }) {
 
           {/* hero composition — collage on desktop, single panel on mobile */}
           <div className="hero__art">
-            <div className="hero__art-a">
+            <div className="hero__art-a" style={{ background: 'oklch(0.22 0.03 10)' }}>
               <img src="images/hero-a.jpg" alt="Bareeq hibiscus drink" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
-            <div className="hero__art-b">
+            <div className="hero__art-b" style={{ background: 'oklch(0.88 0.025 75)' }}>
               <img src="images/hero-b.jpg" alt="Bareeq signature strawberry drink" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
-            <div className="hero__art-c">
+            <div className="hero__art-c" style={{ background: 'oklch(0.68 0.09 72)' }}>
               <img src="images/hero-c.jpg" alt="Bareeq hot chocolate" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
             <div className="hero__chip">
-              <img src="images/hero-chip.jpg" alt="" style={{ width: 48, height: 48, borderRadius: 10, objectFit: 'cover', flexShrink: 0, display: 'block' }} />
+              <img src="images/hero-chip.jpg" alt="" style={{ width: 48, height: 48, borderRadius: 10, objectFit: 'cover', flexShrink: 0, display: 'block', background: 'oklch(0.72 0.10 20)' }} />
               <div>
                 <div className="eyebrow eyebrow-g">Bestseller</div>
                 <div className="serif" style={{ fontSize: 17, lineHeight: 1.1, marginTop: 2 }}>Pistachio Latte</div>
@@ -122,7 +122,7 @@ function HomeScreen({ go, addToCart, openProduct }) {
               ))}
             </div>
           </div>
-          <div style={{ position: 'relative', height: 540 }}>
+          <div style={{ position: 'relative', height: 540, background: 'oklch(0.18 0.02 40)', borderRadius: 6, overflow: 'hidden' }}>
             <img src="images/brew-bar.jpg" alt="Barista crafting V60 pour-over at Bareeq" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', borderRadius: 6, display: 'block' }} />
             <div style={{ position: 'absolute', bottom: 24, left: 24, right: 24, color: 'var(--ivory)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
               <div className="mono" style={{ fontSize: 10, letterSpacing: '0.22em', opacity: 0.65 }}>BARISTA · 04:00</div>
