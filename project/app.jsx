@@ -16,6 +16,10 @@ async function apiFetch(path, options = {}, token = '') {
   const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
   if (token) headers.Authorization = `Bearer ${token}`;
   const response = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  if (response.status === 401) {
+    try { localStorage.removeItem('bareeq.token'); } catch {}
+    throw new Error('Session expired. Please sign in again.');
+  }
   if (!response.ok) {
     const message = await response.text();
     throw new Error(message || `Request failed: ${response.status}`);
