@@ -4,7 +4,7 @@
 
 const { useState: useS, useEffect: useE, useMemo: useM } = React;
 
-const API_BASE = (localStorage.getItem('bareeq.api') || 'http://bareeq.runasp.net').replace(/\/$/, '');
+const API_BASE = (localStorage.getItem('bareeq.api') || 'https://bareeq.runasp.net').replace(/\/$/, '');
 
 const GOOGLE_CLIENT_ID = '340945272338-6d8qprs5jq4lpchilsds87rf2c1c2rt2.apps.googleusercontent.com';
 
