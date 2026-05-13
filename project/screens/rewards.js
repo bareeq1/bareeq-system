@@ -3,18 +3,30 @@
 // ============================================================
 
 function RewardsScreen({
-  go
+  go,
+  data,
+  loyalty
 }) {
   const {
     lang,
     t
   } = useI18n();
-  const points = 612;
-  const tier = window.BAREEQ.TIERS.find(ti => points >= ti.min && points < ti.max) || window.BAREEQ.TIERS[0];
-  const tierIdx = window.BAREEQ.TIERS.indexOf(tier);
-  const nextTier = window.BAREEQ.TIERS[tierIdx + 1];
-  const progress = (points - tier.min) / (tier.max - tier.min) * 100;
-  const streak = 12;
+  const tiers = data.TIERS || [];
+  const badges = data.BADGES || [];
+  const coupons = data.COUPONS || [];
+  const points = loyalty?.points ?? 0;
+  const streak = loyalty?.streakCount ?? 0;
+  const memberNo = loyalty?.memberNumber || '00000';
+  const tier = tiers.find(ti => points >= ti.min && points < ti.max) || tiers[0] || {
+    id: 'bronze',
+    label: 'Bronze',
+    min: 0,
+    max: 250,
+    perks: []
+  };
+  const tierIdx = tiers.indexOf(tier);
+  const nextTier = tiers[tierIdx + 1];
+  const progress = tier.max > tier.min ? (points - tier.min) / (tier.max - tier.min) * 100 : 0;
   return /*#__PURE__*/React.createElement("div", {
     className: "screen"
   }, /*#__PURE__*/React.createElement("section", {
@@ -109,7 +121,7 @@ function RewardsScreen({
       opacity: 0.6,
       marginTop: 16
     }
-  }, t('rewards.member'), " \u2116 00428")), /*#__PURE__*/React.createElement(TierBadge, {
+  }, t('rewards.member'), " \u2116 ", memberNo)), /*#__PURE__*/React.createElement(TierBadge, {
     tier: tier.id,
     size: 56
   })), /*#__PURE__*/React.createElement("div", {
@@ -149,7 +161,7 @@ function RewardsScreen({
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      width: `${progress}%`,
+      width: `${Math.min(progress, 100)}%`,
       height: '100%',
       background: 'linear-gradient(90deg, var(--gold), var(--gold-deep))'
     }
@@ -173,7 +185,7 @@ function RewardsScreen({
       letterSpacing: '0.18em',
       opacity: 0.4
     }
-  }, "YARA \xB7 2026")))))), /*#__PURE__*/React.createElement("section", {
+  }, "BAREEQ \xB7 2026")))))), /*#__PURE__*/React.createElement("section", {
     style: {
       padding: '90px 0',
       background: 'var(--ivory)'
@@ -189,7 +201,7 @@ function RewardsScreen({
       gridTemplateColumns: 'repeat(4, 1fr)',
       gap: 16
     }
-  }, window.BAREEQ.TIERS.map((ti, i) => {
+  }, tiers.map((ti, i) => {
     const active = ti.id === tier.id;
     return /*#__PURE__*/React.createElement("div", {
       key: ti.id,
@@ -448,7 +460,7 @@ function RewardsScreen({
       gridTemplateColumns: 'repeat(4, 1fr)',
       gap: 16
     }
-  }, window.BAREEQ.BADGES.map(b => /*#__PURE__*/React.createElement("div", {
+  }, badges.map(b => /*#__PURE__*/React.createElement("div", {
     key: b.id,
     className: "card",
     style: {
@@ -507,7 +519,7 @@ function RewardsScreen({
       gridTemplateColumns: 'repeat(2, 1fr)',
       gap: 18
     }
-  }, window.BAREEQ.COUPONS.map(c => /*#__PURE__*/React.createElement("div", {
+  }, coupons.map(c => /*#__PURE__*/React.createElement("div", {
     key: c.id,
     style: {
       display: 'flex',

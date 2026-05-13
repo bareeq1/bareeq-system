@@ -2,14 +2,17 @@
 //  MENU — interactive ordering, category filters, cart drawer
 // ============================================================
 
-function MenuScreen({ go, addToCart, openProduct, cart }) {
+function MenuScreen({ go, addToCart, openProduct, cart, data }) {
   const { lang, t } = useI18n();
   const [activeCat, setActiveCat] = useState('all');
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState('curated');
 
+  const allItems = data.ITEMS || [];
+  const categories = data.CATEGORIES || [];
+
   const items = useMemo(() => {
-    let list = window.BAREEQ.ITEMS.slice();
+    let list = allItems.slice();
     if (activeCat !== 'all') list = list.filter(i => i.cat === activeCat);
     if (query) {
       const q = query.toLowerCase();
@@ -19,7 +22,7 @@ function MenuScreen({ go, addToCart, openProduct, cart }) {
     if (sort === 'high') list.sort((a,b) => b.price - a.price);
     if (sort === 'cal')  list.sort((a,b) => (a.calories ?? 9999) - (b.calories ?? 9999));
     return list;
-  }, [activeCat, query, sort]);
+  }, [activeCat, query, sort, allItems]);
 
   const grouped = useMemo(() => {
     if (activeCat !== 'all') return [{ cat: activeCat, items }];
@@ -76,13 +79,13 @@ function MenuScreen({ go, addToCart, openProduct, cart }) {
           </div>
           <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 2 }} className="no-scrollbar">
             <button className="chip" data-active={activeCat === 'all'} onClick={() => setActiveCat('all')}>
-              {t('menu.all')} · {window.BAREEQ.ITEMS.length}
+              {t('menu.all')} · {allItems.length}
             </button>
-            {window.BAREEQ.CATEGORIES.map(c => (
+            {categories.map(c => (
               <button key={c.id} className="chip" data-active={activeCat === c.id} onClick={() => setActiveCat(c.id)}>
                 <span style={{ opacity: 0.7 }}>{c.glyph}</span>
                 {lang === 'ar' ? c.ar : c.label}{' '}
-                <span style={{ opacity: 0.55, fontFamily: 'var(--f-mono)', fontSize: 10 }}>{window.BAREEQ.ITEMS.filter(i => i.cat === c.id).length}</span>
+                <span style={{ opacity: 0.55, fontFamily: 'var(--f-mono)', fontSize: 10 }}>{allItems.filter(i => i.cat === c.id).length}</span>
               </button>
             ))}
           </div>
@@ -98,7 +101,8 @@ function MenuScreen({ go, addToCart, openProduct, cart }) {
             </div>
           )}
           {grouped.map(({ cat, items: catItems }) => {
-            const c = window.BAREEQ.CATEGORIES.find(x => x.id === cat);
+            const c = categories.find(x => x.id === cat);
+            if (!c) return null;
             return (
               <div key={cat} style={{ marginBottom: 80 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 24 }}>
@@ -135,7 +139,7 @@ function MenuScreen({ go, addToCart, openProduct, cart }) {
 // ============================================================
 //  PRODUCT DETAIL MODAL
 // ============================================================
-function ProductDetail({ item, onClose, onAdd }) {
+function ProductDetail({ item, onClose, onAdd, data }) {
   if (!item) return null;
   const { lang, t } = useI18n();
   const [size, setSize] = useState('single');
@@ -144,13 +148,19 @@ function ProductDetail({ item, onClose, onAdd }) {
   const [qty, setQty] = useState(1);
   const [notes, setNotes] = useState('');
 
-  const sizeDelta   = window.BAREEQ.SIZES.find(s => s.id === size)?.delta || 0;
-  const milkDelta   = window.BAREEQ.MILKS.find(m => m.id === milk)?.delta || 0;
-  const extrasDelta = window.BAREEQ.ADDONS.filter(a => extras.includes(a.id)).reduce((sum, a) => sum + a.price, 0);
+  const sizes = data.SIZES || [];
+  const milks = data.MILKS || [];
+  const addons = data.ADDONS || [];
+  const allItems = data.ITEMS || [];
+  const categories = data.CATEGORIES || [];
+
+  const sizeDelta   = sizes.find(s => s.id === size)?.delta || 0;
+  const milkDelta   = milks.find(m => m.id === milk)?.delta || 0;
+  const extrasDelta = addons.filter(a => extras.includes(a.id)).reduce((sum, a) => sum + a.price, 0);
   const total = (item.price + sizeDelta + milkDelta + extrasDelta) * qty;
 
   const toggleExtra = (id) => setExtras(e => e.includes(id) ? e.filter(x => x !== id) : [...e, id]);
-  const pairs = window.BAREEQ.ITEMS.filter(i => i.cat === 'cookies' || i.cat === 'bakery').slice(0, 3);
+  const pairs = allItems.filter(i => i.cat === 'cookies' || i.cat === 'bakery').slice(0, 3);
 
   return (
     <Modal open={!!item} onClose={onClose}>
@@ -168,7 +178,7 @@ function ProductDetail({ item, onClose, onAdd }) {
         {/* RIGHT — config */}
         <div style={{ padding: 36, display: 'flex', flexDirection: 'column', gap: 22, overflow: 'auto' }}>
           <div>
-            <Eyebrow gold>{window.BAREEQ.CATEGORIES.find(c => c.id === item.cat)?.label}</Eyebrow>
+            <Eyebrow gold>{categories.find(c => c.id === item.cat)?.label}</Eyebrow>
             <h2 className="serif" style={{ margin: '12px 0 4px', fontSize: 40, lineHeight: 1.05, letterSpacing: '-0.015em' }}>
               {lang === 'ar' ? item.ar : item.name}
             </h2>
@@ -194,7 +204,7 @@ function ProductDetail({ item, onClose, onAdd }) {
           <div>
             <Eyebrow>{t('product.size')}</Eyebrow>
             <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-              {window.BAREEQ.SIZES.map(s => (
+              {sizes.map(s => (
                 <button key={s.id} className="chip" data-active={size === s.id} onClick={() => setSize(s.id)} style={{ flex: 1, justifyContent: 'center' }}>
                   {s.label}{s.delta > 0 && <span style={{ opacity: 0.6, fontFamily: 'var(--f-mono)', fontSize: 10 }}>+{s.delta}</span>}
                 </button>
@@ -206,7 +216,7 @@ function ProductDetail({ item, onClose, onAdd }) {
           <div>
             <Eyebrow>{t('product.milk')}</Eyebrow>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
-              {window.BAREEQ.MILKS.map(m => (
+              {milks.map(m => (
                 <button key={m.id} className="chip" data-active={milk === m.id} onClick={() => setMilk(m.id)}>
                   {m.label}{m.delta > 0 && <span style={{ opacity: 0.6, fontFamily: 'var(--f-mono)', fontSize: 10 }}>+{m.delta}</span>}
                 </button>
@@ -218,7 +228,7 @@ function ProductDetail({ item, onClose, onAdd }) {
           <div>
             <Eyebrow>{t('product.addons')}</Eyebrow>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
-              {window.BAREEQ.ADDONS.map(a => (
+              {addons.map(a => (
                 <button key={a.id} className="chip" data-active={extras.includes(a.id)} onClick={() => toggleExtra(a.id)}>
                   {a.label} <span style={{ opacity: 0.6, fontFamily: 'var(--f-mono)', fontSize: 10 }}>+{a.price}</span>
                 </button>
@@ -266,7 +276,7 @@ function ProductDetail({ item, onClose, onAdd }) {
 // ============================================================
 //  CART DRAWER
 // ============================================================
-function CartDrawer({ open, onClose, cart, setCart, go }) {
+function CartDrawer({ open, onClose, cart, setCart, go, onCheckout, checkoutBusy }) {
   const { lang, t } = useI18n();
   const isRtl = lang === 'ar';
   const subtotal = cart.reduce((s, c) => s + (c.finalPrice || c.price) * c.qty, 0);
@@ -345,7 +355,14 @@ function CartDrawer({ open, onClose, cart, setCart, go }) {
               <span>{t('cart.earn')} <strong>{points} {t('cart.sparkles')}</strong> ✦</span>
               <span style={{ opacity: 0.7 }}>250 → {t('cart.toSilver')}</span>
             </div>
-            <button className="btn btn--gold btn--block" style={{ marginTop: 14 }}>{t('common.checkout')}</button>
+            <button
+              className="btn btn--gold btn--block"
+              style={{ marginTop: 14, opacity: checkoutBusy ? 0.6 : 1 }}
+              onClick={onCheckout}
+              disabled={checkoutBusy}
+            >
+              {checkoutBusy ? '…' : t('common.checkout')}
+            </button>
           </div>
         )}
       </aside>

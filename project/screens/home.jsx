@@ -2,9 +2,9 @@
 //  HOME — cinematic hero + featured + loyalty preview + testimonials
 // ============================================================
 
-function HomeScreen({ go, addToCart, openProduct }) {
+function HomeScreen({ go, addToCart, openProduct, data }) {
   const { lang, t } = useI18n();
-  const featured = window.BAREEQ.ITEMS.filter(i => ['pis','mdl','jml','aero','rvc','tir'].includes(i.id));
+  const featured = (data.ITEMS || []).filter(i => ['pis','mdl','jml','aero','rvc','tir'].includes(i.id));
 
   return (
     <div className="screen">
@@ -142,7 +142,7 @@ function HomeScreen({ go, addToCart, openProduct }) {
             action={<button className="btn btn--ink" onClick={() => go('rewards')}>{t('home.loyaltyCta')}</button>}
           />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 18 }}>
-            {window.BAREEQ.TIERS.map((tier, i) => (
+            {(data.TIERS || []).map((tier, i) => (
               <div key={tier.id} className={tier.id === 'vip' ? 'lux-border' : 'card'} style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 14, position: 'relative', minHeight: 280 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <TierBadge tier={tier.id} size={48} />
@@ -171,7 +171,7 @@ function HomeScreen({ go, addToCart, openProduct }) {
             title={t('home.testimonialsTitle')}
           />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
-            {window.BAREEQ.TESTIMONIALS.map((tm) => (
+            {(data.TESTIMONIALS || []).map((tm) => (
               <figure key={tm.id} className="card" style={{ padding: 32, margin: 0, display: 'flex', flexDirection: 'column', gap: 18, minHeight: 280 }}>
                 <div style={{ display: 'flex', gap: 4, color: 'var(--gold-deep)' }}>
                   {[1,2,3,4,5].map(s => <span key={s}>✦</span>)}
@@ -196,7 +196,7 @@ function HomeScreen({ go, addToCart, openProduct }) {
       <section style={{ padding: '0 0 110px' }}>
         <div className="wrap">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-            {window.BAREEQ.COUPONS.map(c => (
+            {(data.COUPONS || []).map(c => (
               <div key={c.id} style={{
                 background: c.flavor === 'gold' ? 'linear-gradient(135deg, var(--gold), var(--gold-deep))'
                   : c.flavor === 'matcha' ? 'var(--sage-2)'

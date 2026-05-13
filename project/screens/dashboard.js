@@ -3,25 +3,20 @@
 // ============================================================
 
 function DashboardScreen({
-  go
+  go,
+  user,
+  orders,
+  favorites,
+  addresses,
+  subscriptions
 }) {
   const {
     t
   } = useI18n();
   const [tab, setTab] = useState('overview');
-  const favIds = ['pis', 'mdl', 'jml', 'tir'];
-  const favorites = window.BAREEQ.ITEMS.filter(i => favIds.includes(i.id));
-  const addresses = [{
-    id: 1,
-    label: 'Home',
-    detail: 'Helwan · Mostafa Safwat St 14, Apt 6',
-    primary: true
-  }, {
-    id: 2,
-    label: 'Studio',
-    detail: 'Maadi · Road 9, Building 22',
-    primary: false
-  }];
+  const displayName = user?.fullName || 'Guest';
+  const points = user?.sparkles ?? 0;
+  const streak = user?.streakCount ?? 0;
   return /*#__PURE__*/React.createElement("div", {
     className: "screen"
   }, /*#__PURE__*/React.createElement("section", {
@@ -64,7 +59,7 @@ function DashboardScreen({
       lineHeight: 1,
       letterSpacing: '-0.02em'
     }
-  }, "Yara H."), /*#__PURE__*/React.createElement("div", {
+  }, displayName), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 14,
@@ -81,12 +76,12 @@ function DashboardScreen({
     style: {
       letterSpacing: '0.14em'
     }
-  }, "612 \u2726")))), /*#__PURE__*/React.createElement("div", {
+  }, points, " \u2726")))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 22
     }
-  }, [['18', t('dashboard.orders')], ['612', t('dashboard.sparkles')], ['EGP 2,840', t('dashboard.saved')], ['12', t('dashboard.streak')]].map(([k, v]) => /*#__PURE__*/React.createElement("div", {
+  }, [[String(orders.length), t('dashboard.orders')], [String(points), t('dashboard.sparkles')], ['EGP 2,840', t('dashboard.saved')], [String(streak), t('dashboard.streak')]].map(([k, v]) => /*#__PURE__*/React.createElement("div", {
     key: v,
     style: {
       textAlign: 'center',
@@ -128,18 +123,28 @@ function DashboardScreen({
     className: "wrap"
   }, tab === 'overview' && /*#__PURE__*/React.createElement(Overview, {
     go: go,
-    favorites: favorites
-  }), tab === 'orders' && /*#__PURE__*/React.createElement(Orders, null), tab === 'favorites' && /*#__PURE__*/React.createElement(Favorites, {
+    orders: orders,
+    favorites: favorites,
+    points: points
+  }), tab === 'orders' && /*#__PURE__*/React.createElement(Orders, {
+    orders: orders
+  }), tab === 'favorites' && /*#__PURE__*/React.createElement(Favorites, {
     favorites: favorites
   }), tab === 'addresses' && /*#__PURE__*/React.createElement(Addresses, {
     addresses: addresses
-  }), tab === 'subscriptions' && /*#__PURE__*/React.createElement(Subscriptions, null), tab === 'settings' && /*#__PURE__*/React.createElement(Settings, null))), /*#__PURE__*/React.createElement(Footer, {
+  }), tab === 'subscriptions' && /*#__PURE__*/React.createElement(Subscriptions, {
+    subscriptions: subscriptions
+  }), tab === 'settings' && /*#__PURE__*/React.createElement(Settings, {
+    user: user
+  }))), /*#__PURE__*/React.createElement(Footer, {
     go: go
   }));
 }
 function Overview({
   go,
-  favorites
+  orders,
+  favorites,
+  points
 }) {
   const {
     t
@@ -175,7 +180,13 @@ function Overview({
       display: 'flex',
       flexDirection: 'column'
     }
-  }, window.BAREEQ.ORDERS.slice(0, 4).map((o, i) => /*#__PURE__*/React.createElement("div", {
+  }, (orders || []).length === 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '24px 0',
+      color: 'var(--ink-mute)',
+      fontSize: 14
+    }
+  }, "No orders yet."), (orders || []).slice(0, 4).map((o, i) => /*#__PURE__*/React.createElement("div", {
     key: o.id,
     style: {
       display: 'grid',
@@ -236,7 +247,7 @@ function Overview({
       lineHeight: 0.9,
       color: 'var(--gold)'
     }
-  }, "612", /*#__PURE__*/React.createElement("span", {
+  }, points, /*#__PURE__*/React.createElement("span", {
     style: {
       fontSize: 24,
       opacity: 0.7
@@ -246,7 +257,7 @@ function Overview({
       fontSize: 13,
       color: 'rgba(255,240,225,.7)'
     }
-  }, "138 sparkles until VIP"), /*#__PURE__*/React.createElement("div", {
+  }, "Earn more to reach the next tier"), /*#__PURE__*/React.createElement("div", {
     style: {
       height: 6,
       background: 'rgba(255,240,225,.15)',
@@ -255,7 +266,7 @@ function Overview({
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      width: '72%',
+      width: `${Math.min(points / 750 * 100, 100)}%`,
       height: '100%',
       background: 'linear-gradient(90deg, var(--gold), var(--gold-deep))'
     }
@@ -300,13 +311,18 @@ function Overview({
       color: 'var(--ink-faint)',
       letterSpacing: '0.16em'
     }
-  }, "4 SAVED")), /*#__PURE__*/React.createElement("div", {
+  }, (favorites || []).length, " SAVED")), (favorites || []).length === 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: 'var(--ink-mute)',
+      fontSize: 14
+    }
+  }, "No favorites saved yet."), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(4, 1fr)',
       gap: 16
     }
-  }, favorites.map(f => /*#__PURE__*/React.createElement("div", {
+  }, (favorites || []).map(f => /*#__PURE__*/React.createElement("div", {
     key: f.id,
     style: {
       display: 'flex',
@@ -347,10 +363,13 @@ function Overview({
     className: "btn btn--ink btn--sm"
   }, "+"))))));
 }
-function Orders() {
+function Orders({
+  orders
+}) {
   const {
     t
   } = useI18n();
+  const rows = orders || [];
   return /*#__PURE__*/React.createElement("div", {
     className: "card",
     style: {
@@ -368,14 +387,20 @@ function Orders() {
   }, ['Order', 'Items', 'Date', 'Status', 'Sparkles', 'Total'].map(h => /*#__PURE__*/React.createElement("div", {
     key: h,
     className: "eyebrow"
-  }, h))), window.BAREEQ.ORDERS.map((o, i) => /*#__PURE__*/React.createElement("div", {
+  }, h))), rows.length === 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '32px 28px',
+      color: 'var(--ink-mute)',
+      fontSize: 14
+    }
+  }, "No orders yet."), rows.map((o, i) => /*#__PURE__*/React.createElement("div", {
     key: o.id,
     style: {
       display: 'grid',
       gridTemplateColumns: '110px 2fr 1fr 90px 90px 110px',
       padding: '20px 28px',
       alignItems: 'center',
-      borderBottom: i < window.BAREEQ.ORDERS.length - 1 ? '1px solid var(--rule)' : 'none'
+      borderBottom: i < rows.length - 1 ? '1px solid var(--rule)' : 'none'
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "mono",
@@ -409,13 +434,21 @@ function Orders() {
 function Favorites({
   favorites
 }) {
+  const items = favorites || [];
   return /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(4, 1fr)',
       gap: 18
     }
-  }, favorites.map(f => /*#__PURE__*/React.createElement(ProductCard, {
+  }, items.length === 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      gridColumn: 'span 4',
+      padding: '32px 0',
+      color: 'var(--ink-mute)',
+      fontSize: 14
+    }
+  }, "No favorites saved yet."), items.map(f => /*#__PURE__*/React.createElement(ProductCard, {
     key: f.id,
     item: f,
     onOpen: () => {},
@@ -428,13 +461,14 @@ function Addresses({
   const {
     t
   } = useI18n();
+  const rows = addresses || [];
   return /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',
       gap: 18
     }
-  }, addresses.map(a => /*#__PURE__*/React.createElement("div", {
+  }, rows.map(a => /*#__PURE__*/React.createElement("div", {
     key: a.id,
     className: "card",
     style: {
@@ -498,29 +532,13 @@ function Addresses({
     }
   }, "Add new address"))));
 }
-function Subscriptions() {
+function Subscriptions({
+  subscriptions
+}) {
   const {
     t
   } = useI18n();
-  const plans = [{
-    id: 'daily',
-    label: 'The Daily',
-    price: 1490,
-    sub: 'A drink a day · pick 7 weekly favorites',
-    perks: ['15% off all extras', 'Skip days anytime', 'Free pastry every 7th']
-  }, {
-    id: 'beans',
-    label: 'The Bean Drop',
-    price: 890,
-    sub: '250g specialty beans, monthly',
-    perks: ['New origin each month', 'Tasting notes card', 'Free shipping']
-  }, {
-    id: 'brewbar',
-    label: 'The Brew Bar',
-    price: 2200,
-    sub: 'Eight pour-overs at the counter',
-    perks: ['Reserved stool', 'Cupping invite', 'VIP shortcut']
-  }];
+  const plans = subscriptions || [];
   return /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
@@ -563,7 +581,7 @@ function Subscriptions() {
       fontSize: 13,
       color: 'var(--ink-soft)'
     }
-  }, p.perks.map(perk => /*#__PURE__*/React.createElement("li", {
+  }, (p.perks || []).map(perk => /*#__PURE__*/React.createElement("li", {
     key: perk,
     style: {
       display: 'flex',
@@ -595,10 +613,15 @@ function Subscriptions() {
     className: i === 1 ? 'btn btn--gold btn--sm' : 'btn btn--ink btn--sm'
   }, t('common.subscribe'))))));
 }
-function Settings() {
+function Settings({
+  user
+}) {
   const {
     t
   } = useI18n();
+  const name = user?.fullName || '—';
+  const email = user?.email || '—';
+  const phone = user?.phone || '—';
   return /*#__PURE__*/React.createElement("div", {
     className: "card",
     style: {
@@ -607,7 +630,7 @@ function Settings() {
       gridTemplateColumns: '1fr 1fr',
       gap: 32
     }
-  }, [['Profile', ['Name · Yara H.', 'Email · yara@…com', 'Phone · +20 *** *** ****']], ['Preferences', ['Default milk · Oat', 'Default size · Double', 'Sweetness · Less']], ['Notifications', ['New drops · On', 'Streak reminders · On', 'Coupons · Weekly']], ['Privacy', ['Order history visible · Yes', 'Personalize offers · Yes', 'Marketing · Off']]].map(([h, items]) => /*#__PURE__*/React.createElement("div", {
+  }, [['Profile', [`Name · ${name}`, `Email · ${email}`, `Phone · ${phone}`]], ['Preferences', ['Default milk · Oat', 'Default size · Double', 'Sweetness · Less']], ['Notifications', ['New drops · On', 'Streak reminders · On', 'Coupons · Weekly']], ['Privacy', ['Order history visible · Yes', 'Personalize offers · Yes', 'Marketing · Off']]].map(([h, items]) => /*#__PURE__*/React.createElement("div", {
     key: h
   }, /*#__PURE__*/React.createElement(Eyebrow, {
     gold: true

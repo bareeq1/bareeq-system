@@ -2,15 +2,12 @@
 //  DASHBOARD
 // ============================================================
 
-function DashboardScreen({ go }) {
+function DashboardScreen({ go, user, orders, favorites, addresses, subscriptions }) {
   const { t } = useI18n();
   const [tab, setTab] = useState('overview');
-  const favIds = ['pis','mdl','jml','tir'];
-  const favorites = window.BAREEQ.ITEMS.filter(i => favIds.includes(i.id));
-  const addresses = [
-    { id: 1, label: 'Home', detail: 'Helwan · Mostafa Safwat St 14, Apt 6', primary: true },
-    { id: 2, label: 'Studio', detail: 'Maadi · Road 9, Building 22', primary: false },
-  ];
+  const displayName = user?.fullName || 'Guest';
+  const points = user?.sparkles ?? 0;
+  const streak = user?.streakCount ?? 0;
 
   return (
     <div className="screen">
@@ -21,20 +18,20 @@ function DashboardScreen({ go }) {
             <Ph tone="gold" label="" aspect="1" style={{ width: 78, height: 78, borderRadius: '50%' }} grain={false} />
             <div>
               <Eyebrow gold>{t('dashboard.welcome')}</Eyebrow>
-              <h1 className="serif" style={{ margin: '8px 0 4px', fontSize: 56, lineHeight: 1, letterSpacing: '-0.02em' }}>Yara H.</h1>
+              <h1 className="serif" style={{ margin: '8px 0 4px', fontSize: 56, lineHeight: 1, letterSpacing: '-0.02em' }}>{displayName}</h1>
               <div style={{ display: 'flex', gap: 14, fontSize: 13, color: 'var(--ink-mute)', alignItems: 'center' }}>
                 <span>{t('dashboard.member')}</span>
                 <span style={{ color: 'var(--ink-faint)' }}>·</span>
-                <span className="mono" style={{ letterSpacing: '0.14em' }}>612 ✦</span>
+                <span className="mono" style={{ letterSpacing: '0.14em' }}>{points} ✦</span>
               </div>
             </div>
           </div>
           <div style={{ display: 'flex', gap: 22 }}>
             {[
-              ['18',       t('dashboard.orders')],
-              ['612',      t('dashboard.sparkles')],
-              ['EGP 2,840',t('dashboard.saved')],
-              ['12',       t('dashboard.streak')],
+              [String(orders.length),  t('dashboard.orders')],
+              [String(points),         t('dashboard.sparkles')],
+              ['EGP 2,840',            t('dashboard.saved')],
+              [String(streak),         t('dashboard.streak')],
             ].map(([k,v]) => (
               <div key={v} style={{ textAlign: 'center', padding: '0 8px' }}>
                 <div className="serif" style={{ fontSize: 28, lineHeight: 1 }}>{k}</div>
@@ -64,12 +61,12 @@ function DashboardScreen({ go }) {
       {/* CONTENT */}
       <section style={{ padding: '50px 0 120px' }}>
         <div className="wrap">
-          {tab === 'overview'      && <Overview go={go} favorites={favorites} />}
-          {tab === 'orders'        && <Orders />}
+          {tab === 'overview'      && <Overview go={go} orders={orders} favorites={favorites} points={points} />}
+          {tab === 'orders'        && <Orders orders={orders} />}
           {tab === 'favorites'     && <Favorites favorites={favorites} />}
           {tab === 'addresses'     && <Addresses addresses={addresses} />}
-          {tab === 'subscriptions' && <Subscriptions />}
-          {tab === 'settings'      && <Settings />}
+          {tab === 'subscriptions' && <Subscriptions subscriptions={subscriptions} />}
+          {tab === 'settings'      && <Settings user={user} />}
         </div>
       </section>
 
@@ -78,7 +75,7 @@ function DashboardScreen({ go }) {
   );
 }
 
-function Overview({ go, favorites }) {
+function Overview({ go, orders, favorites, points }) {
   const { t } = useI18n();
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 22 }}>
@@ -89,7 +86,10 @@ function Overview({ go, favorites }) {
           <button className="btn btn--ghost btn--sm">{t('common.viewAll')}</button>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {window.BAREEQ.ORDERS.slice(0,4).map((o, i) => (
+          {(orders || []).length === 0 && (
+            <div style={{ padding: '24px 0', color: 'var(--ink-mute)', fontSize: 14 }}>No orders yet.</div>
+          )}
+          {(orders || []).slice(0, 4).map((o, i) => (
             <div key={o.id} style={{ display: 'grid', gridTemplateColumns: '90px 1fr auto auto', alignItems: 'center', gap: 18, padding: '16px 0', borderBottom: i < 3 ? '1px solid var(--rule)' : 'none' }}>
               <div className="mono" style={{ fontSize: 11, color: 'var(--ink-mute)', letterSpacing: '0.12em' }}>{o.id}</div>
               <div>
@@ -106,12 +106,12 @@ function Overview({ go, favorites }) {
       {/* Wallet card */}
       <div className="card" style={{ padding: 32, background: 'var(--ink)', color: 'var(--ivory)', display: 'flex', flexDirection: 'column', gap: 18 }}>
         <Eyebrow gold style={{ color: 'var(--gold)' }}>{t('dashboard.wallet')}</Eyebrow>
-        <div className="serif" style={{ fontSize: 72, lineHeight: 0.9, color: 'var(--gold)' }}>612<span style={{ fontSize: 24, opacity: 0.7 }}> ✦</span></div>
-        <div style={{ fontSize: 13, color: 'rgba(255,240,225,.7)' }}>138 sparkles until VIP</div>
+        <div className="serif" style={{ fontSize: 72, lineHeight: 0.9, color: 'var(--gold)' }}>{points}<span style={{ fontSize: 24, opacity: 0.7 }}> ✦</span></div>
+        <div style={{ fontSize: 13, color: 'rgba(255,240,225,.7)' }}>Earn more to reach the next tier</div>
         <div style={{ height: 6, background: 'rgba(255,240,225,.15)', borderRadius: 999, overflow: 'hidden' }}>
-          <div style={{ width: '72%', height: '100%', background: 'linear-gradient(90deg, var(--gold), var(--gold-deep))' }} />
+          <div style={{ width: `${Math.min((points / 750) * 100, 100)}%`, height: '100%', background: 'linear-gradient(90deg, var(--gold), var(--gold-deep))' }} />
         </div>
-        <Hair style={{ borderColor: 'rgba(255,240,225,.15)' }}/>
+        <Hair style={{ borderColor: 'rgba(255,240,225,.15)'}}/>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <button className="btn btn--gold btn--sm" onClick={() => go('rewards')}>View tiers</button>
           <button className="btn btn--ghost-light btn--sm">Redeem</button>
@@ -122,10 +122,13 @@ function Overview({ go, favorites }) {
       <div className="card" style={{ padding: 32, gridColumn: 'span 2' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 18 }}>
           <h3 className="serif" style={{ margin: 0, fontSize: 28 }}>{t('dashboard.reorder')}</h3>
-          <span className="mono" style={{ fontSize: 11, color: 'var(--ink-faint)', letterSpacing: '0.16em' }}>4 SAVED</span>
+          <span className="mono" style={{ fontSize: 11, color: 'var(--ink-faint)', letterSpacing: '0.16em' }}>{(favorites || []).length} SAVED</span>
         </div>
+        {(favorites || []).length === 0 && (
+          <div style={{ color: 'var(--ink-mute)', fontSize: 14 }}>No favorites saved yet.</div>
+        )}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-          {favorites.map(f => (
+          {(favorites || []).map(f => (
             <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: 14, borderRadius: 14, border: '1px solid var(--rule)' }}>
               <Ph tone={f.tone} label="" aspect="1" style={{ width: 50, height: 50 }} grain={false} />
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -141,8 +144,9 @@ function Overview({ go, favorites }) {
   );
 }
 
-function Orders() {
+function Orders({ orders }) {
   const { t } = useI18n();
+  const rows = orders || [];
   return (
     <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '110px 2fr 1fr 90px 90px 110px', padding: '14px 28px', background: 'var(--ivory-2)', borderBottom: '1px solid var(--rule)' }}>
@@ -150,8 +154,11 @@ function Orders() {
           <div key={h} className="eyebrow">{h}</div>
         ))}
       </div>
-      {window.BAREEQ.ORDERS.map((o, i) => (
-        <div key={o.id} style={{ display: 'grid', gridTemplateColumns: '110px 2fr 1fr 90px 90px 110px', padding: '20px 28px', alignItems: 'center', borderBottom: i < window.BAREEQ.ORDERS.length - 1 ? '1px solid var(--rule)' : 'none' }}>
+      {rows.length === 0 && (
+        <div style={{ padding: '32px 28px', color: 'var(--ink-mute)', fontSize: 14 }}>No orders yet.</div>
+      )}
+      {rows.map((o, i) => (
+        <div key={o.id} style={{ display: 'grid', gridTemplateColumns: '110px 2fr 1fr 90px 90px 110px', padding: '20px 28px', alignItems: 'center', borderBottom: i < rows.length - 1 ? '1px solid var(--rule)' : 'none' }}>
           <div className="mono" style={{ fontSize: 11.5, letterSpacing: '0.12em' }}>{o.id}</div>
           <div style={{ fontSize: 14 }}>{o.items.join(' · ')}</div>
           <div style={{ fontSize: 12.5, color: 'var(--ink-mute)' }}>{o.date}</div>
@@ -165,9 +172,13 @@ function Orders() {
 }
 
 function Favorites({ favorites }) {
+  const items = favorites || [];
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 18 }}>
-      {favorites.map(f => (
+      {items.length === 0 && (
+        <div style={{ gridColumn: 'span 4', padding: '32px 0', color: 'var(--ink-mute)', fontSize: 14 }}>No favorites saved yet.</div>
+      )}
+      {items.map(f => (
         <ProductCard key={f.id} item={f} onOpen={() => {}} onAdd={() => {}} />
       ))}
     </div>
@@ -176,9 +187,10 @@ function Favorites({ favorites }) {
 
 function Addresses({ addresses }) {
   const { t } = useI18n();
+  const rows = addresses || [];
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
-      {addresses.map(a => (
+      {rows.map(a => (
         <div key={a.id} className="card" style={{ padding: 24, position: 'relative', minHeight: 180 }}>
           {a.primary && <div style={{ position: 'absolute', top: 16, right: 16 }}><Tag tone="gold">Primary</Tag></div>}
           <Eyebrow>Saved · محفوظ</Eyebrow>
@@ -200,13 +212,9 @@ function Addresses({ addresses }) {
   );
 }
 
-function Subscriptions() {
+function Subscriptions({ subscriptions }) {
   const { t } = useI18n();
-  const plans = [
-    { id: 'daily',   label: 'The Daily',    price: 1490, sub: 'A drink a day · pick 7 weekly favorites', perks: ['15% off all extras','Skip days anytime','Free pastry every 7th'] },
-    { id: 'beans',   label: 'The Bean Drop', price: 890,  sub: '250g specialty beans, monthly',           perks: ['New origin each month','Tasting notes card','Free shipping'] },
-    { id: 'brewbar', label: 'The Brew Bar',  price: 2200, sub: 'Eight pour-overs at the counter',         perks: ['Reserved stool','Cupping invite','VIP shortcut'] },
-  ];
+  const plans = subscriptions || [];
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
       {plans.map((p, i) => (
@@ -216,7 +224,7 @@ function Subscriptions() {
           <div style={{ fontSize: 13, color: 'var(--ink-mute)', textWrap: 'pretty' }}>{p.sub}</div>
           <Hair />
           <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13, color: 'var(--ink-soft)' }}>
-            {p.perks.map(perk => <li key={perk} style={{ display: 'flex', gap: 8 }}><span style={{ color: 'var(--gold-deep)' }}>✦</span>{perk}</li>)}
+            {(p.perks || []).map(perk => <li key={perk} style={{ display: 'flex', gap: 8 }}><span style={{ color: 'var(--gold-deep)' }}>✦</span>{perk}</li>)}
           </ul>
           <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
@@ -231,12 +239,15 @@ function Subscriptions() {
   );
 }
 
-function Settings() {
+function Settings({ user }) {
   const { t } = useI18n();
+  const name  = user?.fullName || '—';
+  const email = user?.email    || '—';
+  const phone = user?.phone    || '—';
   return (
     <div className="card" style={{ padding: 36, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
       {[
-        ['Profile',       ['Name · Yara H.','Email · yara@…com','Phone · +20 *** *** ****']],
+        ['Profile',       [`Name · ${name}`, `Email · ${email}`, `Phone · ${phone}`]],
         ['Preferences',   ['Default milk · Oat','Default size · Double','Sweetness · Less']],
         ['Notifications', ['New drops · On','Streak reminders · On','Coupons · Weekly']],
         ['Privacy',       ['Order history visible · Yes','Personalize offers · Yes','Marketing · Off']],

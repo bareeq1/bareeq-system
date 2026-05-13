@@ -6,7 +6,8 @@ function MenuScreen({
   go,
   addToCart,
   openProduct,
-  cart
+  cart,
+  data
 }) {
   const {
     lang,
@@ -15,8 +16,10 @@ function MenuScreen({
   const [activeCat, setActiveCat] = useState('all');
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState('curated');
+  const allItems = data.ITEMS || [];
+  const categories = data.CATEGORIES || [];
   const items = useMemo(() => {
-    let list = window.BAREEQ.ITEMS.slice();
+    let list = allItems.slice();
     if (activeCat !== 'all') list = list.filter(i => i.cat === activeCat);
     if (query) {
       const q = query.toLowerCase();
@@ -26,7 +29,7 @@ function MenuScreen({
     if (sort === 'high') list.sort((a, b) => b.price - a.price);
     if (sort === 'cal') list.sort((a, b) => (a.calories ?? 9999) - (b.calories ?? 9999));
     return list;
-  }, [activeCat, query, sort]);
+  }, [activeCat, query, sort, allItems]);
   const grouped = useMemo(() => {
     if (activeCat !== 'all') return [{
       cat: activeCat,
@@ -179,7 +182,7 @@ function MenuScreen({
     className: "chip",
     "data-active": activeCat === 'all',
     onClick: () => setActiveCat('all')
-  }, t('menu.all'), " \xB7 ", window.BAREEQ.ITEMS.length), window.BAREEQ.CATEGORIES.map(c => /*#__PURE__*/React.createElement("button", {
+  }, t('menu.all'), " \xB7 ", allItems.length), categories.map(c => /*#__PURE__*/React.createElement("button", {
     key: c.id,
     className: "chip",
     "data-active": activeCat === c.id,
@@ -194,7 +197,7 @@ function MenuScreen({
       fontFamily: 'var(--f-mono)',
       fontSize: 10
     }
-  }, window.BAREEQ.ITEMS.filter(i => i.cat === c.id).length)))))), /*#__PURE__*/React.createElement("section", {
+  }, allItems.filter(i => i.cat === c.id).length)))))), /*#__PURE__*/React.createElement("section", {
     style: {
       padding: '50px 0 120px'
     }
@@ -210,7 +213,8 @@ function MenuScreen({
     cat,
     items: catItems
   }) => {
-    const c = window.BAREEQ.CATEGORIES.find(x => x.id === cat);
+    const c = categories.find(x => x.id === cat);
+    if (!c) return null;
     return /*#__PURE__*/React.createElement("div", {
       key: cat,
       style: {
@@ -283,7 +287,8 @@ function MenuScreen({
 function ProductDetail({
   item,
   onClose,
-  onAdd
+  onAdd,
+  data
 }) {
   if (!item) return null;
   const {
@@ -295,12 +300,17 @@ function ProductDetail({
   const [extras, setExtras] = useState([]);
   const [qty, setQty] = useState(1);
   const [notes, setNotes] = useState('');
-  const sizeDelta = window.BAREEQ.SIZES.find(s => s.id === size)?.delta || 0;
-  const milkDelta = window.BAREEQ.MILKS.find(m => m.id === milk)?.delta || 0;
-  const extrasDelta = window.BAREEQ.ADDONS.filter(a => extras.includes(a.id)).reduce((sum, a) => sum + a.price, 0);
+  const sizes = data.SIZES || [];
+  const milks = data.MILKS || [];
+  const addons = data.ADDONS || [];
+  const allItems = data.ITEMS || [];
+  const categories = data.CATEGORIES || [];
+  const sizeDelta = sizes.find(s => s.id === size)?.delta || 0;
+  const milkDelta = milks.find(m => m.id === milk)?.delta || 0;
+  const extrasDelta = addons.filter(a => extras.includes(a.id)).reduce((sum, a) => sum + a.price, 0);
   const total = (item.price + sizeDelta + milkDelta + extrasDelta) * qty;
   const toggleExtra = id => setExtras(e => e.includes(id) ? e.filter(x => x !== id) : [...e, id]);
-  const pairs = window.BAREEQ.ITEMS.filter(i => i.cat === 'cookies' || i.cat === 'bakery').slice(0, 3);
+  const pairs = allItems.filter(i => i.cat === 'cookies' || i.cat === 'bakery').slice(0, 3);
   return /*#__PURE__*/React.createElement(Modal, {
     open: !!item,
     onClose: onClose
@@ -372,7 +382,7 @@ function ProductDetail({
     }
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Eyebrow, {
     gold: true
-  }, window.BAREEQ.CATEGORIES.find(c => c.id === item.cat)?.label), /*#__PURE__*/React.createElement("h2", {
+  }, categories.find(c => c.id === item.cat)?.label), /*#__PURE__*/React.createElement("h2", {
     className: "serif",
     style: {
       margin: '12px 0 4px',
@@ -417,7 +427,7 @@ function ProductDetail({
       gap: 8,
       marginTop: 10
     }
-  }, window.BAREEQ.SIZES.map(s => /*#__PURE__*/React.createElement("button", {
+  }, sizes.map(s => /*#__PURE__*/React.createElement("button", {
     key: s.id,
     className: "chip",
     "data-active": size === s.id,
@@ -439,7 +449,7 @@ function ProductDetail({
       gap: 8,
       marginTop: 10
     }
-  }, window.BAREEQ.MILKS.map(m => /*#__PURE__*/React.createElement("button", {
+  }, milks.map(m => /*#__PURE__*/React.createElement("button", {
     key: m.id,
     className: "chip",
     "data-active": milk === m.id,
@@ -457,7 +467,7 @@ function ProductDetail({
       gap: 8,
       marginTop: 10
     }
-  }, window.BAREEQ.ADDONS.map(a => /*#__PURE__*/React.createElement("button", {
+  }, addons.map(a => /*#__PURE__*/React.createElement("button", {
     key: a.id,
     className: "chip",
     "data-active": extras.includes(a.id),
@@ -573,7 +583,9 @@ function CartDrawer({
   onClose,
   cart,
   setCart,
-  go
+  go,
+  onCheckout,
+  checkoutBusy
 }) {
   const {
     lang,
@@ -804,9 +816,12 @@ function CartDrawer({
   }, "250 \u2192 ", t('cart.toSilver'))), /*#__PURE__*/React.createElement("button", {
     className: "btn btn--gold btn--block",
     style: {
-      marginTop: 14
-    }
-  }, t('common.checkout')))));
+      marginTop: 14,
+      opacity: checkoutBusy ? 0.6 : 1
+    },
+    onClick: onCheckout,
+    disabled: checkoutBusy
+  }, checkoutBusy ? '…' : t('common.checkout')))));
 }
 Object.assign(window, {
   MenuScreen,

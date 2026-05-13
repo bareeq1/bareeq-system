@@ -2,14 +2,19 @@
 //  REWARDS / LOYALTY
 // ============================================================
 
-function RewardsScreen({ go }) {
+function RewardsScreen({ go, data, loyalty }) {
   const { lang, t } = useI18n();
-  const points = 612;
-  const tier = window.BAREEQ.TIERS.find(ti => points >= ti.min && points < ti.max) || window.BAREEQ.TIERS[0];
-  const tierIdx = window.BAREEQ.TIERS.indexOf(tier);
-  const nextTier = window.BAREEQ.TIERS[tierIdx + 1];
-  const progress = ((points - tier.min) / (tier.max - tier.min)) * 100;
-  const streak = 12;
+  const tiers   = data.TIERS   || [];
+  const badges  = data.BADGES  || [];
+  const coupons = data.COUPONS || [];
+  const points  = loyalty?.points    ?? 0;
+  const streak  = loyalty?.streakCount ?? 0;
+  const memberNo = loyalty?.memberNumber || '00000';
+
+  const tier     = tiers.find(ti => points >= ti.min && points < ti.max) || tiers[0] || { id: 'bronze', label: 'Bronze', min: 0, max: 250, perks: [] };
+  const tierIdx  = tiers.indexOf(tier);
+  const nextTier = tiers[tierIdx + 1];
+  const progress = (tier.max > tier.min) ? ((points - tier.min) / (tier.max - tier.min)) * 100 : 0;
 
   return (
     <div className="screen">
@@ -36,7 +41,7 @@ function RewardsScreen({ go }) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
                     <Logo size={26} color="var(--ivory)" />
-                    <div className="mono" style={{ fontSize: 10, letterSpacing: '0.2em', opacity: 0.6, marginTop: 16 }}>{t('rewards.member')} № 00428</div>
+                    <div className="mono" style={{ fontSize: 10, letterSpacing: '0.2em', opacity: 0.6, marginTop: 16 }}>{t('rewards.member')} № {memberNo}</div>
                   </div>
                   <TierBadge tier={tier.id} size={56} />
                 </div>
@@ -48,7 +53,7 @@ function RewardsScreen({ go }) {
                 </div>
                 <div style={{ marginTop: 22 }}>
                   <div style={{ height: 6, background: 'rgba(255,240,225,.15)', borderRadius: 999, overflow: 'hidden' }}>
-                    <div style={{ width: `${progress}%`, height: '100%', background: 'linear-gradient(90deg, var(--gold), var(--gold-deep))' }} />
+                    <div style={{ width: `${Math.min(progress, 100)}%`, height: '100%', background: 'linear-gradient(90deg, var(--gold), var(--gold-deep))' }} />
                   </div>
                   {nextTier && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, opacity: 0.7, marginTop: 8 }}>
@@ -58,7 +63,7 @@ function RewardsScreen({ go }) {
                   )}
                 </div>
                 <div style={{ position: 'absolute', bottom: 16, right: 20, fontFamily: 'var(--f-mono)', fontSize: 9, letterSpacing: '0.18em', opacity: 0.4 }}>
-                  YARA · 2026
+                  BAREEQ · 2026
                 </div>
               </div>
             </div>
@@ -71,7 +76,7 @@ function RewardsScreen({ go }) {
         <div className="wrap">
           <SectionHeader kicker={t('rewards.tiersKicker')} title={t('rewards.tiersTitle')} />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-            {window.BAREEQ.TIERS.map((ti, i) => {
+            {tiers.map((ti, i) => {
               const active = ti.id === tier.id;
               return (
                 <div key={ti.id} className={active ? 'lux-border' : 'card'} style={{ padding: 28, minHeight: 360, display: 'flex', flexDirection: 'column', gap: 16, position: 'relative' }}>
@@ -160,7 +165,7 @@ function RewardsScreen({ go }) {
         <div className="wrap">
           <SectionHeader kicker={t('rewards.badgesKicker')} title={t('rewards.badgesTitle')} lead="Small honors for being a regular. Three more unlocked recently." />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-            {window.BAREEQ.BADGES.map(b => (
+            {badges.map(b => (
               <div key={b.id} className="card" style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 12, opacity: b.earned ? 1 : 0.55 }}>
                 <div style={{
                   width: 56, height: 56, borderRadius: '50%',
@@ -188,7 +193,7 @@ function RewardsScreen({ go }) {
         <div className="wrap">
           <SectionHeader kicker={t('rewards.couponsKicker')} title={t('rewards.couponsTitle')} lead="Personalized offers based on your taste. Tap to apply at checkout." />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 18 }}>
-            {window.BAREEQ.COUPONS.map(c => (
+            {coupons.map(c => (
               <div key={c.id} style={{ display: 'flex', alignItems: 'stretch', gap: 0, borderRadius: 18, overflow: 'hidden', boxShadow: 'var(--shadow-soft)' }}>
                 <div style={{
                   width: 160,
@@ -236,7 +241,7 @@ function RewardsScreen({ go }) {
           <div className="card" style={{ padding: 36, background: 'var(--ink)', color: 'var(--ivory)' }}>
             <div className="serif" style={{ fontSize: 72, color: 'var(--gold)', lineHeight: 1 }}>02</div>
             <div className="mono" style={{ fontSize: 11, color: 'rgba(255,240,225,.6)', letterSpacing: '0.18em', marginTop: 6 }}>FRIENDS REFERRED · 1 TO GO</div>
-            <Hair style={{ margin: '24px 0', borderColor: 'rgba(255,240,225,.15)' }}/>
+            <Hair style={{ margin: '24px 0', borderColor: 'rgba(255,240,225,.15)'}}/>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               {['Salma N. · joined Apr 18 · +50 ✦','Karim S. · joined Mar 02 · +50 ✦'].map(s => (
                 <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>

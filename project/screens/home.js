@@ -5,13 +5,14 @@
 function HomeScreen({
   go,
   addToCart,
-  openProduct
+  openProduct,
+  data
 }) {
   const {
     lang,
     t
   } = useI18n();
-  const featured = window.BAREEQ.ITEMS.filter(i => ['pis', 'mdl', 'jml', 'aero', 'rvc', 'tir'].includes(i.id));
+  const featured = (data.ITEMS || []).filter(i => ['pis', 'mdl', 'jml', 'aero', 'rvc', 'tir'].includes(i.id));
   return /*#__PURE__*/React.createElement("div", {
     className: "screen"
   }, /*#__PURE__*/React.createElement("section", {
@@ -333,7 +334,7 @@ function HomeScreen({
       gridTemplateColumns: 'repeat(4, 1fr)',
       gap: 18
     }
-  }, window.BAREEQ.TIERS.map((tier, i) => /*#__PURE__*/React.createElement("div", {
+  }, (data.TIERS || []).map((tier, i) => /*#__PURE__*/React.createElement("div", {
     key: tier.id,
     className: tier.id === 'vip' ? 'lux-border' : 'card',
     style: {
@@ -410,7 +411,7 @@ function HomeScreen({
       gridTemplateColumns: 'repeat(3, 1fr)',
       gap: 24
     }
-  }, window.BAREEQ.TESTIMONIALS.map(tm => /*#__PURE__*/React.createElement("figure", {
+  }, (data.TESTIMONIALS || []).map(tm => /*#__PURE__*/React.createElement("figure", {
     key: tm.id,
     className: "card",
     style: {
@@ -480,7 +481,7 @@ function HomeScreen({
       gridTemplateColumns: 'repeat(4, 1fr)',
       gap: 16
     }
-  }, window.BAREEQ.COUPONS.map(c => /*#__PURE__*/React.createElement("div", {
+  }, (data.COUPONS || []).map(c => /*#__PURE__*/React.createElement("div", {
     key: c.id,
     style: {
       background: c.flavor === 'gold' ? 'linear-gradient(135deg, var(--gold), var(--gold-deep))' : c.flavor === 'matcha' ? 'var(--sage-2)' : c.flavor === 'burgundy' ? 'var(--burgundy)' : 'var(--ink)',

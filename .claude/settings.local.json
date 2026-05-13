@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"D:\\\\bareeq\\\\website\\\\bareeq-system\\\\server\" -Recurse -Name)",
+      "PowerShell(head *)",
+      "Bash(Get-ChildItem -Path \"D:\\\\bareeq\\\\website\\\\bareeq-system\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(xargs grep -l \"GoogleTokenResponse\")",
+      "Bash(npx babel *)",
+      "Bash(node_modules\\\\.bin\\\\babel project/app.jsx --out-file project/app.js --presets @babel/preset-react)"
+    ]
+  }
+}
