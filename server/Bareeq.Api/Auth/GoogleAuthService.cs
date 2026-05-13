@@ -28,7 +28,7 @@ public class GoogleAuthService
             Audience = new[] { _options.ClientId }
         };
 
-        return await GoogleJsonWebSignature.ValidateAsync(response.IdToken, settings, cancellationToken);
+        return await GoogleJsonWebSignature.ValidateAsync(response.IdToken, settings);
     }
 
     private async Task<GoogleTokenResponse> ExchangeCodeAsync(string code, string redirectUri, CancellationToken cancellationToken)

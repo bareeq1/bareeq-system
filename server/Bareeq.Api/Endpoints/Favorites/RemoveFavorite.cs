@@ -20,8 +20,9 @@ public class RemoveFavorite : EndpointBaseAsync
 
     [HttpDelete("favorites/{itemId}")]
     [Authorize]
-    public override async Task<ActionResult> HandleAsync([FromRoute] string itemId, CancellationToken cancellationToken = default)
+    public override async Task<ActionResult> HandleAsync(CancellationToken cancellationToken = default)
     {
+        var itemId = (string)HttpContext.GetRouteValue("itemId")!;
         var subject = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
         if (string.IsNullOrWhiteSpace(subject) || !Guid.TryParse(subject, out var userId))
         {

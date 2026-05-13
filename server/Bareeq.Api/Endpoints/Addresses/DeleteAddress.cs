@@ -20,8 +20,9 @@ public class DeleteAddress : EndpointBaseAsync
 
     [HttpDelete("addresses/{addressId:guid}")]
     [Authorize]
-    public override async Task<ActionResult> HandleAsync([FromRoute] Guid addressId, CancellationToken cancellationToken = default)
+    public override async Task<ActionResult> HandleAsync(CancellationToken cancellationToken = default)
     {
+        var addressId = Guid.Parse((string)HttpContext.GetRouteValue("addressId")!);
         var subject = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
         if (string.IsNullOrWhiteSpace(subject) || !Guid.TryParse(subject, out var userId))
         {

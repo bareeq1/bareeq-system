@@ -21,8 +21,9 @@ public class UpdateAddress : EndpointBaseAsync
 
     [HttpPut("addresses/{addressId:guid}")]
     [Authorize]
-    public override async Task<ActionResult<AddressDto>> HandleAsync([FromRoute] Guid addressId, AddressUpdateRequest request, CancellationToken cancellationToken = default)
+    public override async Task<ActionResult<AddressDto>> HandleAsync([FromBody] AddressUpdateRequest request, CancellationToken cancellationToken = default)
     {
+        var addressId = Guid.Parse((string)HttpContext.GetRouteValue("addressId")!);
         var subject = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
         if (string.IsNullOrWhiteSpace(subject) || !Guid.TryParse(subject, out var userId))
         {
