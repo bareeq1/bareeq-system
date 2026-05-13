@@ -24,6 +24,10 @@ public class AppDbContext : DbContext
     public DbSet<UserBadge> UserBadges => Set<UserBadge>();
     public DbSet<Coupon> Coupons => Set<Coupon>();
     public DbSet<UserCoupon> UserCoupons => Set<UserCoupon>();
+    public DbSet<Address> Addresses => Set<Address>();
+    public DbSet<UserFavorite> UserFavorites => Set<UserFavorite>();
+    public DbSet<SubscriptionPlan> SubscriptionPlans => Set<SubscriptionPlan>();
+    public DbSet<SubscriptionPerk> SubscriptionPerks => Set<SubscriptionPerk>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -165,6 +169,44 @@ public class AppDbContext : DbContext
                 .HasForeignKey(userCoupon => userCoupon.CouponId);
         });
 
+        modelBuilder.Entity<Address>(entity =>
+        {
+            entity.HasKey(address => address.Id);
+            entity.HasOne(address => address.User)
+                .WithMany()
+                .HasForeignKey(address => address.UserId);
+            entity.Property(address => address.Label).HasMaxLength(64);
+            entity.Property(address => address.Detail).HasMaxLength(256);
+        });
+
+        modelBuilder.Entity<UserFavorite>(entity =>
+        {
+            entity.HasKey(favorite => favorite.Id);
+            entity.HasOne(favorite => favorite.User)
+                .WithMany()
+                .HasForeignKey(favorite => favorite.UserId);
+            entity.HasOne(favorite => favorite.Item)
+                .WithMany()
+                .HasForeignKey(favorite => favorite.ItemId);
+            entity.HasIndex(favorite => new { favorite.UserId, favorite.ItemId }).IsUnique();
+        });
+
+        modelBuilder.Entity<SubscriptionPlan>(entity =>
+        {
+            entity.HasKey(plan => plan.Id);
+            entity.Property(plan => plan.Label).HasMaxLength(128);
+            entity.Property(plan => plan.Description).HasMaxLength(256);
+        });
+
+        modelBuilder.Entity<SubscriptionPerk>(entity =>
+        {
+            entity.HasKey(perk => perk.Id);
+            entity.HasOne(perk => perk.Plan)
+                .WithMany(plan => plan.Perks)
+                .HasForeignKey(perk => perk.PlanId);
+            entity.Property(perk => perk.Text).HasMaxLength(128);
+        });
+
         modelBuilder.Entity<Category>().HasData(CatalogSeed.Categories());
         modelBuilder.Entity<Item>().HasData(CatalogSeed.Items());
         modelBuilder.Entity<Addon>().HasData(CatalogSeed.Addons());
@@ -174,5 +216,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<TierPerk>().HasData(LoyaltySeed.TierPerks());
         modelBuilder.Entity<Badge>().HasData(LoyaltySeed.Badges());
         modelBuilder.Entity<Coupon>().HasData(LoyaltySeed.Coupons());
+        modelBuilder.Entity<SubscriptionPlan>().HasData(SubscriptionSeed.Plans());
+        modelBuilder.Entity<SubscriptionPerk>().HasData(SubscriptionSeed.Perks());
     }
 }
