@@ -69,8 +69,17 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("spa", policy =>
     {
-        var origins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
-        policy.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod();
+        var configOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
+        var hardcoded = new[]
+        {
+            "https://bareeq.coffee",
+            "http://bareeq.coffee",
+            "http://localhost:5173",
+            "http://localhost:5500",
+            "http://127.0.0.1:5500"
+        };
+        var allOrigins = hardcoded.Union(configOrigins).ToArray();
+        policy.WithOrigins(allOrigins).AllowAnyHeader().AllowAnyMethod();
     });
 });
 
