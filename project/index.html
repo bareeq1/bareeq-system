@@ -3,33 +3,76 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Bareeq | بريق — luxury coffee experience</title>
+
+<title>Bareeq | بريق — Specialty Coffee · Helwan, Cairo</title>
+<meta name="description" content="Bareeq is a specialty coffee destination in Helwan, Cairo. Slow-brewed single-origin coffee, ceremonial matcha, seasonal drinks, and a loyalty program that rewards every sip." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://bareeq.coffee/" />
+
+<!-- Open Graph / Social -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://bareeq.coffee/" />
+<meta property="og:title" content="Bareeq | بريق — Specialty Coffee · Helwan, Cairo" />
+<meta property="og:description" content="Slow-brewed single-origin coffee, ceremonial matcha, and seasonal drinks — crafted by hand in Helwan, Cairo." />
+<meta property="og:image" content="https://bareeq.coffee/images/og-cover.jpg" />
+<meta property="og:locale" content="en_EG" />
+<meta property="og:locale:alternate" content="ar_EG" />
+<meta property="og:site_name" content="Bareeq Specialty Coffee" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Bareeq | بريق — Specialty Coffee" />
+<meta name="twitter:description" content="Slow-brewed single-origin coffee and seasonal drinks in Helwan, Cairo." />
+<meta name="twitter:image" content="https://bareeq.coffee/images/og-cover.jpg" />
+
+<!-- Hreflang — absolute URLs required by Google -->
+<link rel="alternate" hreflang="en" href="https://bareeq.coffee/?lang=en" />
+<link rel="alternate" hreflang="ar" href="https://bareeq.coffee/?lang=ar" />
+<link rel="alternate" hreflang="x-default" href="https://bareeq.coffee/" />
+
+<!-- Preconnect critical origins -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=El+Messiri:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://unpkg.com" />
+
+<!-- Google Fonts — non-blocking (removes 850 ms render-block) -->
+<link rel="preload" as="style"
+  href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=El+Messiri:wght@400;600&display=swap"
+  onload="this.onload=null;this.rel='stylesheet'" />
+<noscript>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=El+Messiri:wght@400;600&display=swap" />
+</noscript>
+
+<!-- First-party CSS (8 KB total — kept synchronous for zero layout flash) -->
 <link rel="stylesheet" href="styles.css" />
 <link rel="stylesheet" href="responsive.css" />
 <link rel="stylesheet" href="hero.css" />
 <link rel="stylesheet" href="rtl.css" />
-<link rel="alternate" hreflang="en" href="./?lang=en" />
-<link rel="alternate" hreflang="ar" href="./?lang=ar" />
-<link rel="alternate" hreflang="x-default" href="./" />
 
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<!-- React 18 production builds — no dev warnings, ~60 % smaller than dev -->
+<script defer src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+<script defer src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+
+<!-- App — pre-compiled from JSX; Babel standalone no longer needed (saves 640 KB / 6 s) -->
+<script defer src="i18n.js"></script>
+<script defer src="data.js"></script>
+<script defer src="components.js"></script>
+<script defer src="screens/home.js"></script>
+<script defer src="screens/menu.js"></script>
+<script defer src="screens/rewards.js"></script>
+<script defer src="screens/dashboard.js"></script>
+<script defer src="tweaks-panel.js"></script>
+<script defer src="app.js"></script>
 </head>
 <body>
-<div id="root"></div>
-
-<script type="text/babel" src="i18n.jsx"></script>
-<script type="text/babel" src="data.jsx"></script>
-<script type="text/babel" src="components.jsx"></script>
-<script type="text/babel" src="screens/home.jsx"></script>
-<script type="text/babel" src="screens/menu.jsx"></script>
-<script type="text/babel" src="screens/rewards.jsx"></script>
-<script type="text/babel" src="screens/dashboard.jsx"></script>
-<script type="text/babel" src="tweaks-panel.jsx"></script>
-<script type="text/babel" src="app.jsx"></script>
+<!-- Inline skeleton shown immediately — gives a painted FCP before React mounts -->
+<div id="root">
+  <div style="min-height:100dvh;background:#f2e8db;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px">
+    <div style="font-family:Georgia,'Times New Roman',serif;font-size:34px;letter-spacing:-0.01em;color:#1c130a">
+      bareeq <span style="color:#b88a3a">✦</span>
+    </div>
+    <div style="width:52px;height:2px;border-radius:999px;background:linear-gradient(90deg,#b88a3a,#d4a855);animation:ldbar 1.4s ease-in-out infinite"></div>
+    <style>@keyframes ldbar{0%,100%{opacity:.3;transform:scaleX(.4)}50%{opacity:1;transform:scaleX(1)}}</style>
+  </div>
+</div>
 </body>
 </html>

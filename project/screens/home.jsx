@@ -49,7 +49,7 @@ function HomeScreen({ go, addToCart, openProduct }) {
               <img src="images/hero-a.jpg" alt="Bareeq hibiscus drink" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
             <div className="hero__art-b" style={{ background: 'oklch(0.88 0.025 75)' }}>
-              <img src="images/hero-b.jpg" alt="Bareeq signature strawberry drink" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <img src="images/hero-b.jpg" alt="Bareeq signature strawberry drink" fetchpriority="high" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
             <div className="hero__art-c" style={{ background: 'oklch(0.68 0.09 72)' }}>
               <img src="images/hero-c.jpg" alt="Bareeq hot chocolate" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
@@ -123,7 +123,7 @@ function HomeScreen({ go, addToCart, openProduct }) {
             </div>
           </div>
           <div style={{ position: 'relative', height: 540, background: 'oklch(0.18 0.02 40)', borderRadius: 6, overflow: 'hidden' }}>
-            <img src="images/brew-bar.jpg" alt="Barista crafting V60 pour-over at Bareeq" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', borderRadius: 6, display: 'block' }} />
+            <img src="images/brew-bar.jpg" alt="Barista crafting V60 pour-over at Bareeq" loading="lazy" width="660" height="540" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', borderRadius: 6, display: 'block' }} />
             <div style={{ position: 'absolute', bottom: 24, left: 24, right: 24, color: 'var(--ivory)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
               <div className="mono" style={{ fontSize: 10, letterSpacing: '0.22em', opacity: 0.65 }}>BARISTA · 04:00</div>
               <div className="mono" style={{ fontSize: 10, letterSpacing: '0.22em', opacity: 0.65 }}>92° · 18G · 240ML</div>
@@ -229,8 +229,12 @@ function HomeScreen({ go, addToCart, openProduct }) {
 
 function Footer({ go }) {
   const { t } = useI18n();
+  const socials = [
+    { label: 'IG', href: 'https://www.instagram.com/bareeq.eg__' },
+    { label: 'FB', href: 'https://www.facebook.com/bareeq.egy/' },
+  ];
   return (
-    <footer style={{ background: 'var(--ink)', color: 'var(--ivory)', padding: '80px 0 40px' }}>
+    <footer style={{ background: 'var(--ink)', color: 'var(--ivory)', padding: '80px 0 0' }}>
       <div className="wrap" style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr', gap: 48, marginBottom: 60 }}>
         <div>
           <Logo size={36} color="var(--ivory)" />
@@ -238,15 +242,18 @@ function Footer({ go }) {
             {t('footer.tagline')}
           </p>
           <div style={{ display: 'flex', gap: 10, marginTop: 22 }}>
-            {['IG','FB','WA','TT'].map(s => (
-              <span key={s} style={{ width: 36, height: 36, borderRadius: 999, border: '1px solid rgba(255,240,225,0.2)', display: 'grid', placeItems: 'center', fontFamily: 'var(--f-mono)', fontSize: 10.5 }}>{s}</span>
+            {socials.map(({ label, href }) => (
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+                style={{ width: 36, height: 36, borderRadius: 999, border: '1px solid rgba(255,240,225,0.2)', display: 'grid', placeItems: 'center', fontFamily: 'var(--f-mono)', fontSize: 10.5, color: 'var(--ivory)', textDecoration: 'none', transition: 'border-color .2s, background .2s' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--gold)'; e.currentTarget.style.background = 'rgba(255,240,225,0.08)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,240,225,0.2)'; e.currentTarget.style.background = 'transparent'; }}
+              >{label}</a>
             ))}
           </div>
         </div>
         {[
           [t('footer.order'),  ['Full menu','Brew bar','Coffee beans','Catering']],
           [t('footer.circle'), ['Loyalty tiers','Rewards wallet','Refer a friend','VIP']],
-          [t('footer.visit'),  ['Helwan branch','Hours · 7AM — 1AM','Mostafa Safwat St','+20 ** *** ****']],
         ].map(([h, items]) => (
           <div key={h}>
             <div className="eyebrow eyebrow-g" style={{ color: 'var(--gold)' }}>{h}</div>
@@ -255,10 +262,34 @@ function Footer({ go }) {
             </ul>
           </div>
         ))}
+        <div>
+          <div className="eyebrow eyebrow-g" style={{ color: 'var(--gold)' }}>{t('footer.visit')}</div>
+          <ul style={{ listStyle: 'none', padding: 0, margin: '18px 0 0', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <li style={{ color: 'rgba(255,240,225,0.7)', fontSize: 14 }}>Helwan branch</li>
+            <li style={{ color: 'rgba(255,240,225,0.7)', fontSize: 14 }}>Hours · 7AM — 1AM</li>
+            <li style={{ color: 'rgba(255,240,225,0.7)', fontSize: 14 }}>Mostafa Safwat St</li>
+            <li>
+              <a href="tel:+201110387361" style={{ color: 'rgba(255,240,225,0.7)', fontSize: 14, textDecoration: 'none', fontFamily: 'var(--f-mono)', letterSpacing: '0.06em' }}
+                onMouseEnter={e => e.currentTarget.style.color = 'var(--gold)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,240,225,0.7)'}
+              >+20 111 038 7361</a>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div className="wrap" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 24, borderTop: '1px solid rgba(255,240,225,0.1)', color: 'rgba(255,240,225,0.45)', fontSize: 12 }}>
-        <div className="mono" style={{ letterSpacing: '0.2em' }}>{t('footer.rights')}</div>
-        <div className="mono" style={{ letterSpacing: '0.2em' }}>{t('footer.location')}</div>
+      <div className="wrap" style={{ paddingTop: 24, borderTop: '1px solid rgba(255,240,225,0.1)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'rgba(255,240,225,0.45)', fontSize: 12, paddingBottom: 20 }}>
+          <div className="mono" style={{ letterSpacing: '0.2em' }}>{t('footer.rights')}</div>
+          <div className="mono" style={{ letterSpacing: '0.2em' }}>{t('footer.location')}</div>
+        </div>
+        <div style={{ paddingBottom: 24, textAlign: 'center', fontSize: 11, color: 'rgba(255,240,225,0.25)', fontFamily: 'var(--f-mono)', letterSpacing: '0.14em' }}>
+          CRAFTED BY{' '}
+          <a href="https://gamal.vercel.app" target="_blank" rel="noopener noreferrer"
+            style={{ color: 'rgba(255,240,225,0.45)', textDecoration: 'none', borderBottom: '1px solid rgba(255,240,225,0.2)', paddingBottom: 1, transition: 'color .2s, border-color .2s' }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'var(--gold)'; e.currentTarget.style.borderColor = 'var(--gold)'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,240,225,0.45)'; e.currentTarget.style.borderColor = 'rgba(255,240,225,0.2)'; }}
+          >GAMAL</a>
+        </div>
       </div>
     </footer>
   );
