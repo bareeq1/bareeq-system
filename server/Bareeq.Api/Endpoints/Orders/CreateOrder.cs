@@ -110,6 +110,15 @@ public class CreateOrder : EndpointBaseAsync
         order.Subtotal = order.Items.Sum(orderItem => orderItem.LineTotal);
         order.Points = (int)Math.Floor(order.Subtotal / 10m);
 
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        user.Sparkles += order.Points;
+        user.UpdatedAt = DateTimeOffset.UtcNow;
+
         _dbContext.Orders.Add(order);
         await _dbContext.SaveChangesAsync(cancellationToken);
 

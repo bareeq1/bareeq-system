@@ -8,6 +8,9 @@ public class User
     public string? AvatarUrl { get; set; }
     public string GoogleSubject { get; set; } = string.Empty;
     public string Role { get; set; } = "User";
+    public int Sparkles { get; set; }
+    public int StreakCount { get; set; }
+    public DateTimeOffset? LastStreakAt { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 }

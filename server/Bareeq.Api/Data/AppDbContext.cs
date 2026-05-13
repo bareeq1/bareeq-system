@@ -18,6 +18,12 @@ public class AppDbContext : DbContext
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
     public DbSet<OrderItemAddon> OrderItemAddons => Set<OrderItemAddon>();
+    public DbSet<Tier> Tiers => Set<Tier>();
+    public DbSet<TierPerk> TierPerks => Set<TierPerk>();
+    public DbSet<Badge> Badges => Set<Badge>();
+    public DbSet<UserBadge> UserBadges => Set<UserBadge>();
+    public DbSet<Coupon> Coupons => Set<Coupon>();
+    public DbSet<UserCoupon> UserCoupons => Set<UserCoupon>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -105,10 +111,68 @@ public class AppDbContext : DbContext
             entity.Property(orderItemAddon => orderItemAddon.AddonLabel).HasMaxLength(128);
         });
 
+        modelBuilder.Entity<Tier>(entity =>
+        {
+            entity.HasKey(tier => tier.Id);
+            entity.Property(tier => tier.Label).HasMaxLength(64);
+        });
+
+        modelBuilder.Entity<TierPerk>(entity =>
+        {
+            entity.HasKey(perk => perk.Id);
+            entity.HasOne(perk => perk.Tier)
+                .WithMany(tier => tier.Perks)
+                .HasForeignKey(perk => perk.TierId);
+            entity.Property(perk => perk.Text).HasMaxLength(256);
+        });
+
+        modelBuilder.Entity<Badge>(entity =>
+        {
+            entity.HasKey(badge => badge.Id);
+            entity.Property(badge => badge.Label).HasMaxLength(128);
+            entity.Property(badge => badge.Description).HasMaxLength(256);
+            entity.Property(badge => badge.Glyph).HasMaxLength(8);
+        });
+
+        modelBuilder.Entity<UserBadge>(entity =>
+        {
+            entity.HasKey(userBadge => userBadge.Id);
+            entity.HasOne(userBadge => userBadge.User)
+                .WithMany()
+                .HasForeignKey(userBadge => userBadge.UserId);
+            entity.HasOne(userBadge => userBadge.Badge)
+                .WithMany(badge => badge.UserBadges)
+                .HasForeignKey(userBadge => userBadge.BadgeId);
+        });
+
+        modelBuilder.Entity<Coupon>(entity =>
+        {
+            entity.HasKey(coupon => coupon.Id);
+            entity.Property(coupon => coupon.Label).HasMaxLength(128);
+            entity.Property(coupon => coupon.Description).HasMaxLength(256);
+            entity.Property(coupon => coupon.ExpiryText).HasMaxLength(64);
+            entity.Property(coupon => coupon.Flavor).HasMaxLength(32);
+        });
+
+        modelBuilder.Entity<UserCoupon>(entity =>
+        {
+            entity.HasKey(userCoupon => userCoupon.Id);
+            entity.HasOne(userCoupon => userCoupon.User)
+                .WithMany()
+                .HasForeignKey(userCoupon => userCoupon.UserId);
+            entity.HasOne(userCoupon => userCoupon.Coupon)
+                .WithMany(coupon => coupon.UserCoupons)
+                .HasForeignKey(userCoupon => userCoupon.CouponId);
+        });
+
         modelBuilder.Entity<Category>().HasData(CatalogSeed.Categories());
         modelBuilder.Entity<Item>().HasData(CatalogSeed.Items());
         modelBuilder.Entity<Addon>().HasData(CatalogSeed.Addons());
         modelBuilder.Entity<Milk>().HasData(CatalogSeed.Milks());
         modelBuilder.Entity<SizeOption>().HasData(CatalogSeed.Sizes());
+        modelBuilder.Entity<Tier>().HasData(LoyaltySeed.Tiers());
+        modelBuilder.Entity<TierPerk>().HasData(LoyaltySeed.TierPerks());
+        modelBuilder.Entity<Badge>().HasData(LoyaltySeed.Badges());
+        modelBuilder.Entity<Coupon>().HasData(LoyaltySeed.Coupons());
     }
 }

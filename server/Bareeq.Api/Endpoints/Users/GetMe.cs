@@ -41,7 +41,9 @@ public class GetMe : EndpointBaseAsync
             Email = user.Email,
             FullName = user.FullName,
             AvatarUrl = user.AvatarUrl,
-            Role = user.Role
+            Role = user.Role,
+            Sparkles = user.Sparkles,
+            StreakCount = user.StreakCount
         });
     }
 }
