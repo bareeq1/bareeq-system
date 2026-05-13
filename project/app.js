@@ -9,7 +9,7 @@ const {
 } = React;
 const API_BASE = (localStorage.getItem('bareeq.api') || 'https://bareeq.runasp.net').replace(/\/$/, '');
 
-const GOOGLE_CLIENT_ID = '340945272338-6d8qprs5jq4lpchilsds87rf2c1c2rt2.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '96562673434-lqr790jcs92b5usfdhlsnif2flirap86.apps.googleusercontent.com';
 const readStoredToken = () => {
   try {
     return localStorage.getItem('bareeq.token') || '';

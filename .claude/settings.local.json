@@ -7,7 +7,11 @@
       "Bash(Select-Object Name)",
       "Bash(xargs grep -l \"GoogleTokenResponse\")",
       "Bash(npx babel *)",
-      "Bash(node_modules\\\\.bin\\\\babel project/app.jsx --out-file project/app.js --presets @babel/preset-react)"
+      "Bash(node_modules\\\\.bin\\\\babel project/app.jsx --out-file project/app.js --presets @babel/preset-react)",
+      "PowerShell(dotnet publish *)",
+      "PowerShell(& \"C:\\\\Program Files\\\\IIS\\\\Microsoft Web Deploy V3\\\\msdeploy.exe\" -verb:sync -source:contentPath=\"D:\\\\bareeq\\\\website\\\\bareeq-system\\\\server\\\\Bareeq.Api\\\\publish-output\" -dest:contentPath=\"site68713\",computerName=\"https://site68713.siteasp.net:8172/msdeploy.axd?site=site68713\",userName=\"site68713\",password=\"p#7C8wG=@A3s\",authType=\"Basic\" -allowUntrusted -enableRule:AppOffline)",
+      "PowerShell(dotnet tool install *)",
+      "PowerShell(dotnet-ef *)"
     ]
   }
 }
