@@ -15,6 +15,9 @@ public class AppDbContext : DbContext
     public DbSet<Addon> Addons => Set<Addon>();
     public DbSet<Milk> Milks => Set<Milk>();
     public DbSet<SizeOption> Sizes => Set<SizeOption>();
+    public DbSet<Order> Orders => Set<Order>();
+    public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+    public DbSet<OrderItemAddon> OrderItemAddons => Set<OrderItemAddon>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -67,6 +70,39 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(size => size.Id);
             entity.Property(size => size.Label).HasMaxLength(128);
+        });
+
+        modelBuilder.Entity<Order>(entity =>
+        {
+            entity.HasKey(order => order.Id);
+            entity.Property(order => order.Status).HasMaxLength(32);
+            entity.HasOne(order => order.User)
+                .WithMany()
+                .HasForeignKey(order => order.UserId);
+        });
+
+        modelBuilder.Entity<OrderItem>(entity =>
+        {
+            entity.HasKey(orderItem => orderItem.Id);
+            entity.HasOne(orderItem => orderItem.Order)
+                .WithMany(order => order.Items)
+                .HasForeignKey(orderItem => orderItem.OrderId);
+            entity.HasOne(orderItem => orderItem.Item)
+                .WithMany()
+                .HasForeignKey(orderItem => orderItem.ItemId);
+            entity.Property(orderItem => orderItem.SizeId).HasMaxLength(32);
+            entity.Property(orderItem => orderItem.MilkId).HasMaxLength(32);
+            entity.Property(orderItem => orderItem.Notes).HasMaxLength(512);
+        });
+
+        modelBuilder.Entity<OrderItemAddon>(entity =>
+        {
+            entity.HasKey(orderItemAddon => orderItemAddon.Id);
+            entity.HasOne(orderItemAddon => orderItemAddon.OrderItem)
+                .WithMany(orderItem => orderItem.Addons)
+                .HasForeignKey(orderItemAddon => orderItemAddon.OrderItemId);
+            entity.Property(orderItemAddon => orderItemAddon.AddonId).HasMaxLength(32);
+            entity.Property(orderItemAddon => orderItemAddon.AddonLabel).HasMaxLength(128);
         });
 
         modelBuilder.Entity<Category>().HasData(CatalogSeed.Categories());
