@@ -92,6 +92,30 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("spa");
+
+// Re-apply CORS headers if an unhandled exception causes IIS to discard them
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next(context);
+    }
+    catch (Exception)
+    {
+        if (!context.Response.HasStarted)
+        {
+            var origin = context.Request.Headers.Origin.FirstOrDefault();
+            var allowed = new[] { "https://bareeq.coffee", "http://bareeq.coffee", "http://localhost:5173", "http://localhost:5500", "http://127.0.0.1:5500" };
+            if (origin is not null && allowed.Contains(origin))
+                context.Response.Headers["Access-Control-Allow-Origin"] = origin;
+
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync("{\"error\":\"Internal server error.\"}");
+        }
+    }
+});
+
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
