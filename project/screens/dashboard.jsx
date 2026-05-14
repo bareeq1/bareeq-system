@@ -2,12 +2,18 @@
 //  DASHBOARD
 // ============================================================
 
-function DashboardScreen({ go, user, orders, favorites, addresses, subscriptions }) {
+function DashboardScreen({ go, user, token, orders, rawOrders, favorites, addresses, subscriptions, setCurrentOrderId }) {
   const { t } = useI18n();
   const [tab, setTab] = useState('overview');
   const displayName = user?.fullName || 'Guest';
   const points = user?.sparkles ?? 0;
   const streak = user?.streakCount ?? 0;
+  const isAdmin = user?.role === 'Admin' || user?.isAdmin === true;
+
+  const onViewOrder = (orderId) => {
+    setCurrentOrderId(orderId);
+    go('order-details');
+  };
 
   return (
     <div className="screen">
@@ -52,6 +58,7 @@ function DashboardScreen({ go, user, orders, favorites, addresses, subscriptions
             ['addresses',     t('dashboard.tabs.addresses')],
             ['subscriptions', t('dashboard.tabs.subscriptions')],
             ['settings',      t('dashboard.tabs.settings')],
+            ...(isAdmin ? [['admin', t('dashboard.tabs.admin')]] : []),
           ].map(([id, label]) => (
             <button key={id} className="tab" data-active={tab === id} onClick={() => setTab(id)}>{label}</button>
           ))}
@@ -61,12 +68,13 @@ function DashboardScreen({ go, user, orders, favorites, addresses, subscriptions
       {/* CONTENT */}
       <section style={{ padding: '50px 0 120px' }}>
         <div className="wrap">
-          {tab === 'overview'      && <Overview go={go} orders={orders} favorites={favorites} points={points} />}
-          {tab === 'orders'        && <Orders orders={orders} />}
+          {tab === 'overview'      && <Overview go={go} orders={orders} favorites={favorites} points={points} onViewOrder={onViewOrder} />}
+          {tab === 'orders'        && <Orders orders={orders} rawOrders={rawOrders} onViewOrder={onViewOrder} />}
           {tab === 'favorites'     && <Favorites favorites={favorites} />}
           {tab === 'addresses'     && <Addresses addresses={addresses} />}
           {tab === 'subscriptions' && <Subscriptions subscriptions={subscriptions} />}
           {tab === 'settings'      && <Settings user={user} />}
+          {tab === 'admin'         && <AdminPaymentReviewScreen go={go} token={token} />}
         </div>
       </section>
 
@@ -75,7 +83,7 @@ function DashboardScreen({ go, user, orders, favorites, addresses, subscriptions
   );
 }
 
-function Overview({ go, orders, favorites, points }) {
+function Overview({ go, orders, favorites, points, onViewOrder }) {
   const { t } = useI18n();
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 22 }}>
@@ -144,29 +152,36 @@ function Overview({ go, orders, favorites, points }) {
   );
 }
 
-function Orders({ orders }) {
+function Orders({ orders, rawOrders, onViewOrder }) {
   const { t } = useI18n();
   const rows = orders || [];
+  const raw = rawOrders || [];
   return (
     <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '110px 2fr 1fr 90px 90px 110px', padding: '14px 28px', background: 'var(--ivory-2)', borderBottom: '1px solid var(--rule)' }}>
-        {['Order','Items','Date','Status','Sparkles','Total'].map(h => (
+      <div style={{ display: 'grid', gridTemplateColumns: '110px 2fr 1fr 90px 90px 100px 80px', padding: '14px 28px', background: 'var(--ivory-2)', borderBottom: '1px solid var(--rule)' }}>
+        {['Order', 'Items', 'Date', 'Status', 'Sparkles', 'Total', ''].map(h => (
           <div key={h} className="eyebrow">{h}</div>
         ))}
       </div>
       {rows.length === 0 && (
         <div style={{ padding: '32px 28px', color: 'var(--ink-mute)', fontSize: 14 }}>No orders yet.</div>
       )}
-      {rows.map((o, i) => (
-        <div key={o.id} style={{ display: 'grid', gridTemplateColumns: '110px 2fr 1fr 90px 90px 110px', padding: '20px 28px', alignItems: 'center', borderBottom: i < rows.length - 1 ? '1px solid var(--rule)' : 'none' }}>
-          <div className="mono" style={{ fontSize: 11.5, letterSpacing: '0.12em' }}>{o.id}</div>
-          <div style={{ fontSize: 14 }}>{o.items.join(' · ')}</div>
-          <div style={{ fontSize: 12.5, color: 'var(--ink-mute)' }}>{o.date}</div>
-          <Tag tone="ghost">{o.status}</Tag>
-          <span className="mono" style={{ fontSize: 11, color: 'var(--gold-deep)', letterSpacing: '0.14em' }}>+{o.points} ✦</span>
-          <Price value={o.total} size={13} />
-        </div>
-      ))}
+      {rows.map((o, i) => {
+        const rawOrder = raw.find(r => `BR-${r.id.slice(0, 4).toUpperCase()}` === o.id);
+        return (
+          <div key={o.id} style={{ display: 'grid', gridTemplateColumns: '110px 2fr 1fr 90px 90px 100px 80px', padding: '20px 28px', alignItems: 'center', borderBottom: i < rows.length - 1 ? '1px solid var(--rule)' : 'none' }}>
+            <div className="mono" style={{ fontSize: 11.5, letterSpacing: '0.12em' }}>{o.id}</div>
+            <div style={{ fontSize: 14 }}>{o.items.join(' · ')}</div>
+            <div style={{ fontSize: 12.5, color: 'var(--ink-mute)' }}>{o.date}</div>
+            <Tag tone="ghost">{o.status}</Tag>
+            <span className="mono" style={{ fontSize: 11, color: 'var(--gold-deep)', letterSpacing: '0.14em' }}>+{o.points} ✦</span>
+            <Price value={o.total} size={13} />
+            {rawOrder && onViewOrder && (
+              <button className="btn btn--ghost btn--sm" onClick={() => onViewOrder(rawOrder.id)}>View</button>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -268,4 +283,4 @@ function Settings({ user }) {
   );
 }
 
-Object.assign(window, { DashboardScreen });
+Object.assign(window, { DashboardScreen, Orders });

@@ -8,7 +8,6 @@ const {
   useMemo: useM
 } = React;
 const API_BASE = (localStorage.getItem('bareeq.api') || 'https://bareeq.runasp.net').replace(/\/$/, '');
-
 const GOOGLE_CLIENT_ID = '96562673434-lqr790jcs92b5usfdhlsnif2flirap86.apps.googleusercontent.com';
 const readStoredToken = () => {
   try {
@@ -28,7 +27,9 @@ async function apiFetch(path, options = {}, token = '') {
     headers
   });
   if (response.status === 401) {
-    try { localStorage.removeItem('bareeq.token'); } catch {}
+    try {
+      localStorage.removeItem('bareeq.token');
+    } catch {}
     throw new Error('Session expired. Please sign in again.');
   }
   if (!response.ok) {
@@ -127,6 +128,7 @@ function App() {
   const [checkoutBusy, setCheckoutBusy] = useS(false);
   const [loginOpen, setLoginOpen] = useS(false);
   const [loginBusy, setLoginBusy] = useS(false);
+  const [currentOrderId, setCurrentOrderId] = useS('');
   useE(() => {
     document.documentElement.dataset.palette = tw.palette;
   }, [tw.palette]);
@@ -221,39 +223,18 @@ function App() {
     sub: plan.description,
     perks: plan.perks || []
   })), [plans]);
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     if (!token) {
-      alert('Sign in to complete checkout.');
+      setLoginOpen(true);
       return;
     }
-    if (!cart.length || checkoutBusy) return;
-    setCheckoutBusy(true);
-    try {
-      const payload = {
-        items: cart.map(item => ({
-          itemId: item.id,
-          sizeId: item.size || 'single',
-          milkId: item.milk || 'fresh',
-          addonIds: item.extras || [],
-          quantity: item.qty || 1,
-          notes: item.notes || ''
-        }))
-      };
-      await apiFetch('/orders', {
-        method: 'POST',
-        body: JSON.stringify(payload)
-      }, token);
-      const nextOrders = await apiFetch('/orders', {}, token);
-      setOrders(nextOrders || []);
-      const nextLoyalty = await apiFetch('/loyalty/summary', {}, token);
-      setLoyalty(nextLoyalty);
-      setCart([]);
-      setDrawerOpen(false);
-    } catch (err) {
-      alert(err.message || 'Checkout failed.');
-    } finally {
-      setCheckoutBusy(false);
-    }
+    if (!cart.length) return;
+    setDrawerOpen(false);
+    setScreen('checkout');
+  };
+  const refreshOrders = () => {
+    if (!token) return;
+    apiFetch('/orders', {}, token).then(data => setOrders(data || [])).catch(() => {});
   };
   const handleGoogleLogin = () => {
     if (!window.google?.accounts?.oauth2) {
@@ -410,10 +391,29 @@ function App() {
   }), screen === 'dashboard' && /*#__PURE__*/React.createElement(DashboardScreen, {
     go: setScreen,
     user: user,
+    token: token,
     orders: orderRows,
+    rawOrders: orders,
     favorites: favoriteItems,
     addresses: addressList,
-    subscriptions: subscriptionPlans
+    subscriptions: subscriptionPlans,
+    setCurrentOrderId: setCurrentOrderId
+  }), screen === 'checkout' && /*#__PURE__*/React.createElement(CheckoutScreen, {
+    go: setScreen,
+    cart: cart,
+    token: token,
+    setCart: setCart,
+    setCurrentOrderId: setCurrentOrderId
+  }), screen === 'order-confirmation' && /*#__PURE__*/React.createElement(OrderConfirmationScreen, {
+    go: setScreen,
+    currentOrderId: currentOrderId
+  }), screen === 'order-details' && /*#__PURE__*/React.createElement(OrderDetailsScreen, {
+    go: setScreen,
+    currentOrderId: currentOrderId,
+    token: token
+  }), screen === 'admin-payments' && /*#__PURE__*/React.createElement(AdminPaymentReviewScreen, {
+    go: setScreen,
+    token: token
   })), /*#__PURE__*/React.createElement(CartDrawer, {
     open: drawerOpen,
     onClose: () => setDrawerOpen(false),

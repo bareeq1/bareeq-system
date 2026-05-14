@@ -5,10 +5,13 @@
 function DashboardScreen({
   go,
   user,
+  token,
   orders,
+  rawOrders,
   favorites,
   addresses,
-  subscriptions
+  subscriptions,
+  setCurrentOrderId
 }) {
   const {
     t
@@ -17,6 +20,11 @@ function DashboardScreen({
   const displayName = user?.fullName || 'Guest';
   const points = user?.sparkles ?? 0;
   const streak = user?.streakCount ?? 0;
+  const isAdmin = user?.role === 'Admin' || user?.isAdmin === true;
+  const onViewOrder = orderId => {
+    setCurrentOrderId(orderId);
+    go('order-details');
+  };
   return /*#__PURE__*/React.createElement("div", {
     className: "screen"
   }, /*#__PURE__*/React.createElement("section", {
@@ -110,7 +118,7 @@ function DashboardScreen({
       gap: 4,
       padding: '14px 32px'
     }
-  }, [['overview', t('dashboard.tabs.overview')], ['orders', t('dashboard.tabs.orders')], ['favorites', t('dashboard.tabs.favorites')], ['addresses', t('dashboard.tabs.addresses')], ['subscriptions', t('dashboard.tabs.subscriptions')], ['settings', t('dashboard.tabs.settings')]].map(([id, label]) => /*#__PURE__*/React.createElement("button", {
+  }, [['overview', t('dashboard.tabs.overview')], ['orders', t('dashboard.tabs.orders')], ['favorites', t('dashboard.tabs.favorites')], ['addresses', t('dashboard.tabs.addresses')], ['subscriptions', t('dashboard.tabs.subscriptions')], ['settings', t('dashboard.tabs.settings')], ...(isAdmin ? [['admin', t('dashboard.tabs.admin')]] : [])].map(([id, label]) => /*#__PURE__*/React.createElement("button", {
     key: id,
     className: "tab",
     "data-active": tab === id,
@@ -125,9 +133,12 @@ function DashboardScreen({
     go: go,
     orders: orders,
     favorites: favorites,
-    points: points
+    points: points,
+    onViewOrder: onViewOrder
   }), tab === 'orders' && /*#__PURE__*/React.createElement(Orders, {
-    orders: orders
+    orders: orders,
+    rawOrders: rawOrders,
+    onViewOrder: onViewOrder
   }), tab === 'favorites' && /*#__PURE__*/React.createElement(Favorites, {
     favorites: favorites
   }), tab === 'addresses' && /*#__PURE__*/React.createElement(Addresses, {
@@ -136,6 +147,9 @@ function DashboardScreen({
     subscriptions: subscriptions
   }), tab === 'settings' && /*#__PURE__*/React.createElement(Settings, {
     user: user
+  }), tab === 'admin' && /*#__PURE__*/React.createElement(AdminPaymentReviewScreen, {
+    go: go,
+    token: token
   }))), /*#__PURE__*/React.createElement(Footer, {
     go: go
   }));
@@ -144,7 +158,8 @@ function Overview({
   go,
   orders,
   favorites,
-  points
+  points,
+  onViewOrder
 }) {
   const {
     t
@@ -364,12 +379,15 @@ function Overview({
   }, "+"))))));
 }
 function Orders({
-  orders
+  orders,
+  rawOrders,
+  onViewOrder
 }) {
   const {
     t
   } = useI18n();
   const rows = orders || [];
+  const raw = rawOrders || [];
   return /*#__PURE__*/React.createElement("div", {
     className: "card",
     style: {
@@ -379,12 +397,12 @@ function Orders({
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
-      gridTemplateColumns: '110px 2fr 1fr 90px 90px 110px',
+      gridTemplateColumns: '110px 2fr 1fr 90px 90px 100px 80px',
       padding: '14px 28px',
       background: 'var(--ivory-2)',
       borderBottom: '1px solid var(--rule)'
     }
-  }, ['Order', 'Items', 'Date', 'Status', 'Sparkles', 'Total'].map(h => /*#__PURE__*/React.createElement("div", {
+  }, ['Order', 'Items', 'Date', 'Status', 'Sparkles', 'Total', ''].map(h => /*#__PURE__*/React.createElement("div", {
     key: h,
     className: "eyebrow"
   }, h))), rows.length === 0 && /*#__PURE__*/React.createElement("div", {
@@ -393,43 +411,49 @@ function Orders({
       color: 'var(--ink-mute)',
       fontSize: 14
     }
-  }, "No orders yet."), rows.map((o, i) => /*#__PURE__*/React.createElement("div", {
-    key: o.id,
-    style: {
-      display: 'grid',
-      gridTemplateColumns: '110px 2fr 1fr 90px 90px 110px',
-      padding: '20px 28px',
-      alignItems: 'center',
-      borderBottom: i < rows.length - 1 ? '1px solid var(--rule)' : 'none'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "mono",
-    style: {
-      fontSize: 11.5,
-      letterSpacing: '0.12em'
-    }
-  }, o.id), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 14
-    }
-  }, o.items.join(' · ')), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 12.5,
-      color: 'var(--ink-mute)'
-    }
-  }, o.date), /*#__PURE__*/React.createElement(Tag, {
-    tone: "ghost"
-  }, o.status), /*#__PURE__*/React.createElement("span", {
-    className: "mono",
-    style: {
-      fontSize: 11,
-      color: 'var(--gold-deep)',
-      letterSpacing: '0.14em'
-    }
-  }, "+", o.points, " \u2726"), /*#__PURE__*/React.createElement(Price, {
-    value: o.total,
-    size: 13
-  }))));
+  }, "No orders yet."), rows.map((o, i) => {
+    const rawOrder = raw.find(r => `BR-${r.id.slice(0, 4).toUpperCase()}` === o.id);
+    return /*#__PURE__*/React.createElement("div", {
+      key: o.id,
+      style: {
+        display: 'grid',
+        gridTemplateColumns: '110px 2fr 1fr 90px 90px 100px 80px',
+        padding: '20px 28px',
+        alignItems: 'center',
+        borderBottom: i < rows.length - 1 ? '1px solid var(--rule)' : 'none'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "mono",
+      style: {
+        fontSize: 11.5,
+        letterSpacing: '0.12em'
+      }
+    }, o.id), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 14
+      }
+    }, o.items.join(' · ')), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12.5,
+        color: 'var(--ink-mute)'
+      }
+    }, o.date), /*#__PURE__*/React.createElement(Tag, {
+      tone: "ghost"
+    }, o.status), /*#__PURE__*/React.createElement("span", {
+      className: "mono",
+      style: {
+        fontSize: 11,
+        color: 'var(--gold-deep)',
+        letterSpacing: '0.14em'
+      }
+    }, "+", o.points, " \u2726"), /*#__PURE__*/React.createElement(Price, {
+      value: o.total,
+      size: 13
+    }), rawOrder && onViewOrder && /*#__PURE__*/React.createElement("button", {
+      className: "btn btn--ghost btn--sm",
+      onClick: () => onViewOrder(rawOrder.id)
+    }, "View"));
+  }));
 }
 function Favorites({
   favorites
@@ -660,5 +684,6 @@ function Settings({
   }, t('common.edit'))))))));
 }
 Object.assign(window, {
-  DashboardScreen
+  DashboardScreen,
+  Orders
 });

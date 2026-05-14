@@ -81,6 +81,7 @@ function App() {
   const [checkoutBusy, setCheckoutBusy] = useS(false);
   const [loginOpen, setLoginOpen] = useS(false);
   const [loginBusy, setLoginBusy] = useS(false);
+  const [currentOrderId, setCurrentOrderId] = useS('');
 
   useE(() => {
     document.documentElement.dataset.palette = tw.palette;
@@ -181,37 +182,18 @@ function App() {
     })),
   [plans]);
 
-  const handleCheckout = async () => {
-    if (!token) {
-      alert('Sign in to complete checkout.');
-      return;
-    }
+  const handleCheckout = () => {
+    if (!token) { setLoginOpen(true); return; }
+    if (!cart.length) return;
+    setDrawerOpen(false);
+    setScreen('checkout');
+  };
 
-    if (!cart.length || checkoutBusy) return;
-    setCheckoutBusy(true);
-    try {
-      const payload = {
-        items: cart.map((item) => ({
-          itemId: item.id,
-          sizeId: item.size || 'single',
-          milkId: item.milk || 'fresh',
-          addonIds: item.extras || [],
-          quantity: item.qty || 1,
-          notes: item.notes || ''
-        }))
-      };
-      await apiFetch('/orders', { method: 'POST', body: JSON.stringify(payload) }, token);
-      const nextOrders = await apiFetch('/orders', {}, token);
-      setOrders(nextOrders || []);
-      const nextLoyalty = await apiFetch('/loyalty/summary', {}, token);
-      setLoyalty(nextLoyalty);
-      setCart([]);
-      setDrawerOpen(false);
-    } catch (err) {
-      alert(err.message || 'Checkout failed.');
-    } finally {
-      setCheckoutBusy(false);
-    }
+  const refreshOrders = () => {
+    if (!token) return;
+    apiFetch('/orders', {}, token)
+      .then(data => setOrders(data || []))
+      .catch(() => {});
   };
 
   const handleGoogleLogin = () => {
@@ -320,10 +302,14 @@ function App() {
 
       {/* SCREENS */}
       <main>
-        {screen === 'home'      && <HomeScreen go={setScreen} addToCart={addToCart} openProduct={openProduct} data={mergedData} />}
-        {screen === 'menu'      && <MenuScreen go={setScreen} addToCart={addToCart} openProduct={openProduct} cart={cart} data={mergedData} onCheckout={handleCheckout} checkoutBusy={checkoutBusy} />}
-        {screen === 'rewards'   && <RewardsScreen go={setScreen} data={mergedData} loyalty={loyalty} />}
-        {screen === 'dashboard' && <DashboardScreen go={setScreen} user={user} orders={orderRows} favorites={favoriteItems} addresses={addressList} subscriptions={subscriptionPlans} />}
+        {screen === 'home'               && <HomeScreen go={setScreen} addToCart={addToCart} openProduct={openProduct} data={mergedData} />}
+        {screen === 'menu'               && <MenuScreen go={setScreen} addToCart={addToCart} openProduct={openProduct} cart={cart} data={mergedData} onCheckout={handleCheckout} checkoutBusy={checkoutBusy} />}
+        {screen === 'rewards'            && <RewardsScreen go={setScreen} data={mergedData} loyalty={loyalty} />}
+        {screen === 'dashboard'          && <DashboardScreen go={setScreen} user={user} token={token} orders={orderRows} rawOrders={orders} favorites={favoriteItems} addresses={addressList} subscriptions={subscriptionPlans} setCurrentOrderId={setCurrentOrderId} />}
+        {screen === 'checkout'           && <CheckoutScreen go={setScreen} cart={cart} token={token} setCart={setCart} setCurrentOrderId={setCurrentOrderId} />}
+        {screen === 'order-confirmation' && <OrderConfirmationScreen go={setScreen} currentOrderId={currentOrderId} />}
+        {screen === 'order-details'      && <OrderDetailsScreen go={setScreen} currentOrderId={currentOrderId} token={token} />}
+        {screen === 'admin-payments'     && <AdminPaymentReviewScreen go={setScreen} token={token} />}
       </main>
 
       {/* CART DRAWER (global) */}
