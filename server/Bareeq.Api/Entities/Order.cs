@@ -14,6 +14,7 @@ public class Order
     public Branch? Branch { get; set; }
     public string DeliveryMethod { get; set; } = "Pickup";
     public string? DeliveryAddress { get; set; }
+    public string? PaymentMethod { get; set; }
     public Guid? PaymentId { get; set; }
     public OrderPayment? Payment { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;

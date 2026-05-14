@@ -8,6 +8,8 @@ public class User
     public string? AvatarUrl { get; set; }
     public string GoogleSubject { get; set; } = string.Empty;
     public string Role { get; set; } = "User";
+    public string? BranchId { get; set; }
+    public Branch? Branch { get; set; }
     public int Sparkles { get; set; }
     public int StreakCount { get; set; }
     public DateTimeOffset? LastStreakAt { get; set; }

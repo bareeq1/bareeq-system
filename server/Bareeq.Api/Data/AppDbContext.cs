@@ -44,6 +44,11 @@ public class AppDbContext : DbContext
             entity.Property(user => user.Email).HasMaxLength(256);
             entity.Property(user => user.FullName).HasMaxLength(256);
             entity.Property(user => user.Role).HasMaxLength(32);
+            entity.Property(user => user.BranchId).HasMaxLength(64);
+            entity.HasOne(user => user.Branch)
+                .WithMany()
+                .HasForeignKey(user => user.BranchId)
+                .IsRequired(false);
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -117,6 +122,7 @@ public class AppDbContext : DbContext
             entity.Property(order => order.Source).HasMaxLength(32);
             entity.Property(order => order.DeliveryMethod).HasMaxLength(32);
             entity.Property(order => order.DeliveryAddress).HasMaxLength(512);
+            entity.Property(order => order.PaymentMethod).HasMaxLength(32);
             entity.HasOne(order => order.User)
                 .WithMany()
                 .HasForeignKey(order => order.UserId);

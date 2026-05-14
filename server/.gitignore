@@ -15,7 +15,7 @@ publish-output/
 *.snupkg
 packages/
 project.lock.json
-
+wwwroot/
 # Secrets & config overrides
 appsettings.Development.json
 appsettings.Local.json
