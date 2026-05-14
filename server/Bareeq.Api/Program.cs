@@ -1,6 +1,7 @@
 using System.Text;
 using Bareeq.Api.Auth;
 using Bareeq.Api.Data;
+using Bareeq.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -46,6 +47,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddHttpClient<GoogleAuthService>();
+builder.Services.AddScoped<IBlobStorageService, NullBlobStorageService>();
+builder.Services.AddScoped<IEmailService, NullEmailService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
