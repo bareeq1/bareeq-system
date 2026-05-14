@@ -221,6 +221,7 @@ function App() {
           setUser(data.user);
           setLoginOpen(false);
           if (data.user?.role === 'Admin') setScreen('admin-payments');
+          else if (data.user?.role === 'BranchStaff') setScreen('branch-orders');
         } catch (err) {
           alert(err.message || 'Sign-in failed. Check the console for details.');
         } finally {
@@ -311,6 +312,7 @@ function App() {
         {screen === 'order-confirmation' && <OrderConfirmationScreen go={setScreen} currentOrderId={currentOrderId} />}
         {screen === 'order-details'      && <OrderDetailsScreen go={setScreen} currentOrderId={currentOrderId} token={token} />}
         {screen === 'admin-payments'     && <AdminPaymentReviewScreen go={setScreen} token={token} />}
+        {screen === 'branch-orders'      && <BranchOrdersScreen go={setScreen} token={token} user={user} catalog={mergedData} />}
       </main>
 
       {/* CART DRAWER (global) */}

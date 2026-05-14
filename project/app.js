@@ -266,6 +266,7 @@ function App() {
           setToken(data.accessToken);
           setUser(data.user);
           setLoginOpen(false);
+          if (data.user?.role === 'Admin') setScreen('admin-payments');else if (data.user?.role === 'BranchStaff') setScreen('branch-orders');
         } catch (err) {
           alert(err.message || 'Sign-in failed. Check the console for details.');
         } finally {
@@ -414,6 +415,11 @@ function App() {
   }), screen === 'admin-payments' && /*#__PURE__*/React.createElement(AdminPaymentReviewScreen, {
     go: setScreen,
     token: token
+  }), screen === 'branch-orders' && /*#__PURE__*/React.createElement(BranchOrdersScreen, {
+    go: setScreen,
+    token: token,
+    user: user,
+    catalog: mergedData
   })), /*#__PURE__*/React.createElement(CartDrawer, {
     open: drawerOpen,
     onClose: () => setDrawerOpen(false),

@@ -10,6 +10,7 @@ for src in \
   project/screens/menu.jsx \
   project/screens/rewards.jsx \
   project/screens/dashboard.jsx \
+  project/screens/branch/branch-orders.jsx \
   project/tweaks-panel.jsx \
   project/app.jsx; do
   out="${src%.jsx}.js"
