@@ -6,6 +6,9 @@ for src in \
   project/i18n.jsx \
   project/data.jsx \
   project/components.jsx \
+  project/pos-hub.jsx \
+  project/screens/kds-board.jsx \
+  project/screens/new-order.jsx \
   project/screens/home.jsx \
   project/screens/menu.jsx \
   project/screens/rewards.jsx \

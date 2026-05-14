@@ -221,6 +221,7 @@ function App() {
           setUser(data.user);
           setLoginOpen(false);
           if (data.user?.role === 'Admin') setScreen('admin-payments');
+          else if (data.user?.role === 'BranchStaff') setScreen('kds-board');
         } catch (err) {
           alert(err.message || 'Sign-in failed. Check the console for details.');
         } finally {
@@ -259,17 +260,26 @@ function App() {
             <Logo size={26} />
           </button>
           <div className="topnav__center">
-            {[
-              ['home',      tr('nav.home')],
-              ['menu',      tr('nav.menu')],
-              ['rewards',   tr('nav.rewards')],
-              ['dashboard', tr('nav.account')],
-            ].map(([id, label]) => (
-              <button key={id} className="tab" data-active={screen === id}
-                onClick={() => { setScreen(id); window.scrollTo({ top: 0, behavior: 'auto' }); }}>
-                {label}
-              </button>
-            ))}
+            {user?.role === 'BranchStaff' ? (
+              <>
+                <button className="tab" data-active={screen === 'kds-board'}
+                  onClick={() => setScreen('kds-board')}>KDS Board</button>
+                <button className="tab" data-active={screen === 'new-order'}
+                  onClick={() => setScreen('new-order')}>New Order</button>
+              </>
+            ) : (
+              [
+                ['home',      tr('nav.home')],
+                ['menu',      tr('nav.menu')],
+                ['rewards',   tr('nav.rewards')],
+                ['dashboard', tr('nav.account')],
+              ].map(([id, label]) => (
+                <button key={id} className="tab" data-active={screen === id}
+                  onClick={() => { setScreen(id); window.scrollTo({ top: 0, behavior: 'auto' }); }}>
+                  {label}
+                </button>
+              ))
+            )}
           </div>
           <div className="topnav__right">
             <button
@@ -311,6 +321,8 @@ function App() {
         {screen === 'order-confirmation' && <OrderConfirmationScreen go={setScreen} currentOrderId={currentOrderId} />}
         {screen === 'order-details'      && <OrderDetailsScreen go={setScreen} currentOrderId={currentOrderId} token={token} />}
         {screen === 'admin-payments'     && <AdminPaymentReviewScreen go={setScreen} token={token} />}
+        {screen === 'kds-board'          && <KdsBoardScreen go={setScreen} token={token} user={user} />}
+        {screen === 'new-order'          && <NewOrderScreen go={setScreen} token={token} data={mergedData} />}
       </main>
 
       {/* CART DRAWER (global) */}

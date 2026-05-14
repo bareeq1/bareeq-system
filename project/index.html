@@ -55,10 +55,16 @@
 <script defer src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
 <script defer src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
 
+<!-- SignalR — loaded only when KDS board is active; harmless overhead otherwise -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js" crossorigin="anonymous"></script>
+
 <!-- App — pre-compiled from JSX; Babel standalone no longer needed (saves 640 KB / 6 s) -->
 <script defer src="i18n.js"></script>
 <script defer src="data.js"></script>
 <script defer src="components.js"></script>
+<script defer src="pos-hub.js"></script>
+<script defer src="screens/kds-board.js"></script>
+<script defer src="screens/new-order.js"></script>
 <script defer src="screens/home.js"></script>
 <script defer src="screens/menu.js"></script>
 <script defer src="screens/rewards.js"></script>
