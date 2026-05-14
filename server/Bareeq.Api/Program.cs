@@ -52,9 +52,11 @@ builder.Services.AddHttpClient<GoogleAuthService>();
 builder.Services.Configure<BlobStorageOptions>(builder.Configuration.GetSection(BlobStorageOptions.SectionName));
 builder.Services.Configure<BrevoOptions>(builder.Configuration.GetSection(BrevoOptions.SectionName));
 
+builder.Services.AddHttpContextAccessor();
+
 var blobConnectionString = builder.Configuration.GetSection(BlobStorageOptions.SectionName)["ConnectionString"];
 if (string.IsNullOrWhiteSpace(blobConnectionString))
-    builder.Services.AddScoped<IBlobStorageService, NullBlobStorageService>();
+    builder.Services.AddScoped<IBlobStorageService, LocalBlobStorageService>();
 else
     builder.Services.AddScoped<IBlobStorageService, AzureBlobStorageService>();
 
@@ -106,7 +108,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+    if (db.Database.IsRelational())
+        db.Database.Migrate();
+    else
+        db.Database.EnsureCreated();
 }
 
 if (app.Environment.IsDevelopment())
@@ -115,6 +120,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
 app.UseCors("spa");
 
 // Re-apply CORS headers if an unhandled exception causes IIS to discard them
@@ -154,3 +160,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

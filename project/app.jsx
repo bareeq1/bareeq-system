@@ -220,6 +220,7 @@ function App() {
           setToken(data.accessToken);
           setUser(data.user);
           setLoginOpen(false);
+          if (data.user?.role === 'Admin') setScreen('admin-payments');
         } catch (err) {
           alert(err.message || 'Sign-in failed. Check the console for details.');
         } finally {
