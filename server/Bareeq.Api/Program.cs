@@ -50,6 +50,7 @@ builder.Services.AddHttpClient<GoogleAuthService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        options.MapInboundClaims = false;
         var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? new JwtOptions();
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -123,6 +124,14 @@ app.Use(async (context, next) =>
 });
 
 app.UseHttpsRedirection();
+
+app.Use(async (context, next) =>
+{
+    Console.WriteLine("AUTH HEADER:");
+    Console.WriteLine(context.Request.Headers.Authorization.ToString());
+    await next();
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

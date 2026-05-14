@@ -1,3 +1,4 @@
+using Bareeq.Api.Data.Seeds;
 using Bareeq.Api.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,9 +16,11 @@ public class AppDbContext : DbContext
     public DbSet<Addon> Addons => Set<Addon>();
     public DbSet<Milk> Milks => Set<Milk>();
     public DbSet<SizeOption> Sizes => Set<SizeOption>();
+    public DbSet<Branch> Branches => Set<Branch>();
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
     public DbSet<OrderItemAddon> OrderItemAddons => Set<OrderItemAddon>();
+    public DbSet<OrderPayment> OrderPayments => Set<OrderPayment>();
     public DbSet<Tier> Tiers => Set<Tier>();
     public DbSet<TierPerk> TierPerks => Set<TierPerk>();
     public DbSet<Badge> Badges => Set<Badge>();
@@ -82,13 +85,45 @@ public class AppDbContext : DbContext
             entity.Property(size => size.Label).HasMaxLength(128);
         });
 
+        modelBuilder.Entity<Branch>(entity =>
+        {
+            entity.HasKey(branch => branch.Id);
+            entity.Property(branch => branch.Id).HasMaxLength(64);
+            entity.Property(branch => branch.Label).HasMaxLength(128);
+            entity.Property(branch => branch.Address).HasMaxLength(256);
+            entity.Property(branch => branch.Phone).HasMaxLength(32);
+            entity.Property(branch => branch.Hours).HasMaxLength(256);
+        });
+
+        modelBuilder.Entity<OrderPayment>(entity =>
+        {
+            entity.HasKey(payment => payment.Id);
+            entity.Property(payment => payment.Status).HasMaxLength(32);
+            entity.Property(payment => payment.ImageUrl).HasMaxLength(1024);
+            entity.Property(payment => payment.RejectionReason).HasMaxLength(512);
+            entity.HasOne(payment => payment.Order)
+                .WithOne(order => order.Payment)
+                .HasForeignKey<OrderPayment>(payment => payment.OrderId);
+            entity.HasOne(payment => payment.Reviewer)
+                .WithMany()
+                .HasForeignKey(payment => payment.ReviewedBy)
+                .IsRequired(false);
+        });
+
         modelBuilder.Entity<Order>(entity =>
         {
             entity.HasKey(order => order.Id);
             entity.Property(order => order.Status).HasMaxLength(32);
+            entity.Property(order => order.Source).HasMaxLength(32);
+            entity.Property(order => order.DeliveryMethod).HasMaxLength(32);
+            entity.Property(order => order.DeliveryAddress).HasMaxLength(512);
             entity.HasOne(order => order.User)
                 .WithMany()
                 .HasForeignKey(order => order.UserId);
+            entity.HasOne(order => order.Branch)
+                .WithMany()
+                .HasForeignKey(order => order.BranchId)
+                .IsRequired(false);
         });
 
         modelBuilder.Entity<OrderItem>(entity =>
@@ -207,6 +242,7 @@ public class AppDbContext : DbContext
             entity.Property(perk => perk.Text).HasMaxLength(128);
         });
 
+        modelBuilder.Entity<Branch>().HasData(BranchSeed.Branches());
         modelBuilder.Entity<Category>().HasData(CatalogSeed.Categories());
         modelBuilder.Entity<Item>().HasData(CatalogSeed.Items());
         modelBuilder.Entity<Addon>().HasData(CatalogSeed.Addons());
