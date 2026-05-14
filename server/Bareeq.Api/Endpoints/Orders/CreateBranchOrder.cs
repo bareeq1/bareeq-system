@@ -1,9 +1,11 @@
 using Ardalis.ApiEndpoints;
 using Bareeq.Api.Data;
 using Bareeq.Api.Entities;
+using Bareeq.Api.Hubs;
 using Bareeq.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -14,10 +16,12 @@ public class CreateBranchOrder : EndpointBaseAsync
     .WithActionResult<CheckoutResponse>
 {
     private readonly AppDbContext _dbContext;
+    private readonly IHubContext<OrderHub> _hub;
 
-    public CreateBranchOrder(AppDbContext dbContext)
+    public CreateBranchOrder(AppDbContext dbContext, IHubContext<OrderHub> hub)
     {
         _dbContext = dbContext;
+        _hub = hub;
     }
 
     [HttpPost("orders/branch")]
@@ -123,6 +127,9 @@ public class CreateBranchOrder : EndpointBaseAsync
 
         _dbContext.Orders.Add(order);
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        await _hub.Clients.Group($"branch-{branch.Id}")
+            .SendAsync("OrderCreated", new { orderId = order.Id }, cancellationToken);
 
         return Ok(new CheckoutResponse
         {

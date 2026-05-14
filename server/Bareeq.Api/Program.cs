@@ -2,6 +2,7 @@ using System.Text;
 using Bareeq.Api.Auth;
 using Bareeq.Api.Configuration;
 using Bareeq.Api.Data;
+using Bareeq.Api.Hubs;
 using Bareeq.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -84,6 +85,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddSignalR();
 
 builder.Services.AddCors(options =>
 {
@@ -95,11 +97,12 @@ builder.Services.AddCors(options =>
             "https://bareeq.coffee",
             "http://bareeq.coffee",
             "http://localhost:5173",
+            "http://localhost:5174",
             "http://localhost:5500",
             "http://127.0.0.1:5500"
         };
         var allOrigins = hardcoded.Union(configOrigins).ToArray();
-        policy.WithOrigins(allOrigins).AllowAnyHeader().AllowAnyMethod();
+        policy.WithOrigins(allOrigins).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
     });
 });
 
@@ -135,7 +138,7 @@ app.Use(async (context, next) =>
         if (!context.Response.HasStarted)
         {
             var origin = context.Request.Headers.Origin.FirstOrDefault();
-            var allowed = new[] { "https://bareeq.coffee", "http://bareeq.coffee", "http://localhost:5173", "http://localhost:5500", "http://127.0.0.1:5500" };
+            var allowed = new[] { "https://bareeq.coffee", "http://bareeq.coffee", "http://localhost:5173", "http://localhost:5174", "http://localhost:5500", "http://127.0.0.1:5500" };
             if (origin is not null && allowed.Contains(origin))
                 context.Response.Headers["Access-Control-Allow-Origin"] = origin;
 
@@ -158,6 +161,7 @@ app.Use(async (context, next) =>
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<OrderHub>("/hubs/orders");
 
 app.Run();
 

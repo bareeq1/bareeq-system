@@ -9,4 +9,5 @@ public class UserDto
     public string Role { get; set; } = "User";
     public int Sparkles { get; set; }
     public int StreakCount { get; set; }
+    public string? BranchId { get; set; }
 }

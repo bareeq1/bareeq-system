@@ -1,8 +1,10 @@
 using Ardalis.ApiEndpoints;
 using Bareeq.Api.Data;
+using Bareeq.Api.Hubs;
 using Bareeq.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -13,10 +15,12 @@ public class ConfirmBranchPayment : EndpointBaseAsync
     .WithActionResult<ConfirmPaymentResponse>
 {
     private readonly AppDbContext _dbContext;
+    private readonly IHubContext<OrderHub> _hub;
 
-    public ConfirmBranchPayment(AppDbContext dbContext)
+    public ConfirmBranchPayment(AppDbContext dbContext, IHubContext<OrderHub> hub)
     {
         _dbContext = dbContext;
+        _hub = hub;
     }
 
     [HttpPost("orders/{orderId:guid}/confirm-payment")]
@@ -51,6 +55,12 @@ public class ConfirmBranchPayment : EndpointBaseAsync
         order.PaymentMethod = request.PaymentMethod;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        if (!string.IsNullOrWhiteSpace(order.BranchId))
+        {
+            await _hub.Clients.Group($"branch-{order.BranchId}")
+                .SendAsync("OrderCreated", new { orderId = order.Id }, cancellationToken);
+        }
 
         return Ok(new ConfirmPaymentResponse
         {

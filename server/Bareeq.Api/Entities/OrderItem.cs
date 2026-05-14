@@ -16,5 +16,7 @@ public class OrderItem
     public int UnitPrice { get; set; }
     public int LineTotal { get; set; }
 
+    public string KdsStatus { get; set; } = "Pending";
+
     public List<OrderItemAddon> Addons { get; set; } = new();
 }

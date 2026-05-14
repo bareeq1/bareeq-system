@@ -144,6 +144,7 @@ public class AppDbContext : DbContext
             entity.Property(orderItem => orderItem.SizeId).HasMaxLength(32);
             entity.Property(orderItem => orderItem.MilkId).HasMaxLength(32);
             entity.Property(orderItem => orderItem.Notes).HasMaxLength(512);
+            entity.Property(orderItem => orderItem.KdsStatus).HasMaxLength(32);
         });
 
         modelBuilder.Entity<OrderItemAddon>(entity =>

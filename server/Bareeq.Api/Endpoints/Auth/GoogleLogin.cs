@@ -82,7 +82,8 @@ public class GoogleLogin : EndpointBaseAsync
                 AvatarUrl = user.AvatarUrl,
                 Role = user.Role,
                 Sparkles = user.Sparkles,
-                StreakCount = user.StreakCount
+                StreakCount = user.StreakCount,
+                BranchId = user.BranchId
             }
         };
 

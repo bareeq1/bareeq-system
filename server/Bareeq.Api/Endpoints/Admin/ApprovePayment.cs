@@ -1,9 +1,11 @@
 using Ardalis.ApiEndpoints;
 using Bareeq.Api.Data;
+using Bareeq.Api.Hubs;
 using Bareeq.Api.Models;
 using Bareeq.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -15,11 +17,13 @@ public class ApprovePayment : EndpointBaseAsync
 {
     private readonly AppDbContext _dbContext;
     private readonly IEmailService _emailService;
+    private readonly IHubContext<OrderHub> _hub;
 
-    public ApprovePayment(AppDbContext dbContext, IEmailService emailService)
+    public ApprovePayment(AppDbContext dbContext, IEmailService emailService, IHubContext<OrderHub> hub)
     {
         _dbContext = dbContext;
         _emailService = emailService;
+        _hub = hub;
     }
 
     [HttpPut("orders/{orderId:guid}/payment/{paymentId:guid}/approve")]
@@ -63,6 +67,12 @@ public class ApprovePayment : EndpointBaseAsync
                 payment.Order.Branch?.Label ?? string.Empty,
                 payment.Order.DeliveryMethod,
                 cancellationToken);
+
+            if (!string.IsNullOrWhiteSpace(payment.Order.BranchId))
+            {
+                await _hub.Clients.Group($"branch-{payment.Order.BranchId}")
+                    .SendAsync("OrderCreated", new { orderId = payment.Order.Id }, cancellationToken);
+            }
 
             return Ok(new PaymentApprovalResponse
             {
