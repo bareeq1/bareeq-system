@@ -1,5 +1,6 @@
 using System.Text;
 using Bareeq.Api.Auth;
+using Bareeq.Api.Configuration;
 using Bareeq.Api.Data;
 using Bareeq.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -47,8 +48,21 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddHttpClient<GoogleAuthService>();
-builder.Services.AddScoped<IBlobStorageService, NullBlobStorageService>();
-builder.Services.AddScoped<IEmailService, NullEmailService>();
+
+builder.Services.Configure<BlobStorageOptions>(builder.Configuration.GetSection(BlobStorageOptions.SectionName));
+builder.Services.Configure<BrevoOptions>(builder.Configuration.GetSection(BrevoOptions.SectionName));
+
+var blobConnectionString = builder.Configuration.GetSection(BlobStorageOptions.SectionName)["ConnectionString"];
+if (string.IsNullOrWhiteSpace(blobConnectionString))
+    builder.Services.AddScoped<IBlobStorageService, NullBlobStorageService>();
+else
+    builder.Services.AddScoped<IBlobStorageService, AzureBlobStorageService>();
+
+var brevoApiKey = builder.Configuration.GetSection(BrevoOptions.SectionName)["ApiKey"];
+if (string.IsNullOrWhiteSpace(brevoApiKey))
+    builder.Services.AddScoped<IEmailService, NullEmailService>();
+else
+    builder.Services.AddHttpClient<IEmailService, BrevoEmailService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
