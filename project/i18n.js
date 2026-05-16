@@ -137,7 +137,8 @@ const EN = {
       "addresses": "Addresses",
       "subscriptions": "Subscriptions",
       "settings": "Settings",
-      "admin": "Payments"
+      "admin": "Payments",
+      "adminAnalytics": "Analytics"
     },
     "recent": "Recent orders",
     "wallet": "Rewards wallet",
@@ -192,6 +193,19 @@ const EN = {
     "payment": "Payment",
     "paymentStatus": "Payment status",
     "noPayment": "No payment submitted yet."
+  },
+  "adminDashboard": {
+    "kicker": "Admin",
+    "title": "Analytics.",
+    "day": "Today",
+    "month": "This month",
+    "year": "This year",
+    "totalOrders": "Total orders",
+    "totalRevenue": "Total revenue",
+    "topBeverages": "Top 5 beverages",
+    "noBeverages": "No orders in this period.",
+    "loading": "Loading…",
+    "errorLoad": "Failed to load analytics."
   },
   "adminPayment": {
     "kicker": "Admin",
@@ -351,7 +365,8 @@ const AR = {
       "addresses": "العناوين",
       "subscriptions": "الاشتراكات",
       "settings": "الإعدادات",
-      "admin": "المدفوعات"
+      "admin": "المدفوعات",
+      "adminAnalytics": "التحليلات"
     },
     "recent": "أحدث الطلبات",
     "wallet": "محفظة المكافآت",
@@ -406,6 +421,19 @@ const AR = {
     "payment": "الدفع",
     "paymentStatus": "حالة الدفع",
     "noPayment": "لم يُرفع أي إيصال بعد."
+  },
+  "adminDashboard": {
+    "kicker": "الإدارة",
+    "title": "التحليلات.",
+    "day": "اليوم",
+    "month": "هذا الشهر",
+    "year": "هذا العام",
+    "totalOrders": "إجمالي الطلبات",
+    "totalRevenue": "إجمالي الإيرادات",
+    "topBeverages": "أكثر ٥ مشروبات طلبًا",
+    "noBeverages": "لا توجد طلبات في هذه الفترة.",
+    "loading": "جارٍ التحميل…",
+    "errorLoad": "فشل تحميل التحليلات."
   },
   "adminPayment": {
     "kicker": "الإدارة",

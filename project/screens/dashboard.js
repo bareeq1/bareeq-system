@@ -118,7 +118,7 @@ function DashboardScreen({
       gap: 4,
       padding: '14px 32px'
     }
-  }, [['overview', t('dashboard.tabs.overview')], ['orders', t('dashboard.tabs.orders')], ['favorites', t('dashboard.tabs.favorites')], ['addresses', t('dashboard.tabs.addresses')], ['subscriptions', t('dashboard.tabs.subscriptions')], ['settings', t('dashboard.tabs.settings')], ...(isAdmin ? [['admin', t('dashboard.tabs.admin')]] : [])].map(([id, label]) => /*#__PURE__*/React.createElement("button", {
+  }, [['overview', t('dashboard.tabs.overview')], ['orders', t('dashboard.tabs.orders')], ['favorites', t('dashboard.tabs.favorites')], ['addresses', t('dashboard.tabs.addresses')], ['subscriptions', t('dashboard.tabs.subscriptions')], ['settings', t('dashboard.tabs.settings')], ...(isAdmin ? [['admin', t('dashboard.tabs.admin')], ['admin-analytics', t('dashboard.tabs.adminAnalytics')]] : [])].map(([id, label]) => /*#__PURE__*/React.createElement("button", {
     key: id,
     className: "tab",
     "data-active": tab === id,
@@ -149,6 +149,8 @@ function DashboardScreen({
     user: user
   }), tab === 'admin' && /*#__PURE__*/React.createElement(AdminPaymentReviewScreen, {
     go: go,
+    token: token
+  }), tab === 'admin-analytics' && /*#__PURE__*/React.createElement(AdminAnalyticsDashboardScreen, {
     token: token
   }))), /*#__PURE__*/React.createElement(Footer, {
     go: go

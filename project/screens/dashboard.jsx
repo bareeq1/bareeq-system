@@ -58,7 +58,10 @@ function DashboardScreen({ go, user, token, orders, rawOrders, favorites, addres
             ['addresses',     t('dashboard.tabs.addresses')],
             ['subscriptions', t('dashboard.tabs.subscriptions')],
             ['settings',      t('dashboard.tabs.settings')],
-            ...(isAdmin ? [['admin', t('dashboard.tabs.admin')]] : []),
+            ...(isAdmin ? [
+              ['admin',           t('dashboard.tabs.admin')],
+              ['admin-analytics', t('dashboard.tabs.adminAnalytics')],
+            ] : []),
           ].map(([id, label]) => (
             <button key={id} className="tab" data-active={tab === id} onClick={() => setTab(id)}>{label}</button>
           ))}
@@ -74,7 +77,8 @@ function DashboardScreen({ go, user, token, orders, rawOrders, favorites, addres
           {tab === 'addresses'     && <Addresses addresses={addresses} />}
           {tab === 'subscriptions' && <Subscriptions subscriptions={subscriptions} />}
           {tab === 'settings'      && <Settings user={user} />}
-          {tab === 'admin'         && <AdminPaymentReviewScreen go={go} token={token} />}
+          {tab === 'admin'          && <AdminPaymentReviewScreen go={go} token={token} />}
+          {tab === 'admin-analytics' && <AdminAnalyticsDashboardScreen token={token} />}
         </div>
       </section>
 
