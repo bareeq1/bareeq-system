@@ -35,7 +35,7 @@ public class GetPendingOrders : EndpointBaseAsync
             return BadRequest("Staff account is not assigned to a branch.");
 
         var orders = await _dbContext.Orders
-            .Where(o => o.BranchId == staff.BranchId && o.Status == "Confirmed")
+            .Where(o => o.BranchId == staff.BranchId && (o.Status == "Placed" || o.Status == "Confirmed"))
             .Include(o => o.Items)
                 .ThenInclude(i => i.Item)
             .Include(o => o.Items)
