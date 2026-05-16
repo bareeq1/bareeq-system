@@ -13,6 +13,9 @@ for src in \
   project/screens/menu.jsx \
   project/screens/rewards.jsx \
   project/screens/dashboard.jsx \
+  project/screens/admin/dashboard.jsx \
+  project/screens/admin/payment-review.jsx \
+  project/screens/admin/admin-dashboard.jsx \
   project/tweaks-panel.jsx \
   project/app.jsx; do
   out="${src%.jsx}.js"

@@ -220,7 +220,7 @@ function App() {
           setToken(data.accessToken);
           setUser(data.user);
           setLoginOpen(false);
-          if (data.user?.role === 'Admin') setScreen('admin-payments');
+          if (data.user?.role === 'Admin') setScreen('admin-dashboard');
           else if (data.user?.role === 'BranchStaff') setScreen('kds-board');
         } catch (err) {
           alert(err.message || 'Sign-in failed. Check the console for details.');
@@ -314,6 +314,7 @@ function App() {
         {screen === 'order-confirmation' && <OrderConfirmationScreen go={setScreen} currentOrderId={currentOrderId} />}
         {screen === 'order-details'      && <OrderDetailsScreen go={setScreen} currentOrderId={currentOrderId} token={token} />}
         {screen === 'admin-payments'     && <AdminPaymentReviewScreen go={setScreen} token={token} />}
+        {screen === 'admin-dashboard'    && <AdminDashboardScreen go={setScreen} token={token} user={user} />}
         {screen === 'kds-board'          && <KdsBoardScreen go={setScreen} token={token} user={user} />}
         {screen === 'new-order'          && <NewOrderScreen go={setScreen} token={token} data={mergedData} />}
       </main>

@@ -266,7 +266,7 @@ function App() {
           setToken(data.accessToken);
           setUser(data.user);
           setLoginOpen(false);
-          if (data.user?.role === 'Admin') setScreen('admin-payments');else if (data.user?.role === 'BranchStaff') setScreen('kds-board');
+          if (data.user?.role === 'Admin') setScreen('admin-dashboard');else if (data.user?.role === 'BranchStaff') setScreen('kds-board');
         } catch (err) {
           alert(err.message || 'Sign-in failed. Check the console for details.');
         } finally {
@@ -316,15 +316,7 @@ function App() {
     size: 26
   })), /*#__PURE__*/React.createElement("div", {
     className: "topnav__center"
-  }, user?.role === 'BranchStaff' ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
-    className: "tab",
-    "data-active": screen === 'kds-board',
-    onClick: () => setScreen('kds-board')
-  }, "KDS Board"), /*#__PURE__*/React.createElement("button", {
-    className: "tab",
-    "data-active": screen === 'new-order',
-    onClick: () => setScreen('new-order')
-  }, "New Order")) : [['home', tr('nav.home')], ['menu', tr('nav.menu')], ['rewards', tr('nav.rewards')], ['dashboard', tr('nav.account')]].map(([id, label]) => /*#__PURE__*/React.createElement("button", {
+  }, [['home', tr('nav.home')], ['menu', tr('nav.menu')], ['rewards', tr('nav.rewards')], ['dashboard', tr('nav.account')]].map(([id, label]) => /*#__PURE__*/React.createElement("button", {
     key: id,
     className: "tab",
     "data-active": screen === id,
@@ -425,6 +417,10 @@ function App() {
   }), screen === 'admin-payments' && /*#__PURE__*/React.createElement(AdminPaymentReviewScreen, {
     go: setScreen,
     token: token
+  }), screen === 'admin-dashboard' && /*#__PURE__*/React.createElement(AdminDashboardScreen, {
+    go: setScreen,
+    token: token,
+    user: user
   }), screen === 'kds-board' && /*#__PURE__*/React.createElement(KdsBoardScreen, {
     go: setScreen,
     token: token,
