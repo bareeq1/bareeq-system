@@ -588,7 +588,7 @@ function CheckoutScreen({
       fontSize: 22,
       letterSpacing: '0.08em'
     }
-  }, "01XXXXXXXXXX")), /*#__PURE__*/React.createElement("div", {
+  }, "01110387361")), /*#__PURE__*/React.createElement("div", {
     style: {
       textAlign: 'right'
     }

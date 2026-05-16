@@ -290,7 +290,7 @@ function CheckoutScreen({ go, cart, token, setCart, setCurrentOrderId }) {
                 <div style={{ background: 'rgba(255,240,225,.08)', borderRadius: 12, padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
                     <div className="mono" style={{ fontSize: 10, letterSpacing: '0.18em', color: 'var(--gold)', marginBottom: 6 }}>{t('checkout.instapayNumber')}</div>
-                    <div className="mono" style={{ fontSize: 22, letterSpacing: '0.08em' }}>01XXXXXXXXXX</div>
+                    <div className="mono" style={{ fontSize: 22, letterSpacing: '0.08em' }}>01110387361</div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
                     <div className="mono" style={{ fontSize: 10, letterSpacing: '0.18em', color: 'var(--gold)', marginBottom: 6 }}>TOTAL</div>
