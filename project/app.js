@@ -301,6 +301,8 @@ function App() {
   const openProduct = item => setOpenedItem(item);
   const cartCount = cart.reduce((s, c) => s + c.qty, 0);
   const displayName = user?.fullName || 'Guest';
+  const isBranchStaff = user?.role === 'BranchStaff';
+  const goHome = () => setScreen(isBranchStaff ? 'branch-orders' : 'home');
   return /*#__PURE__*/React.createElement("div", {
     className: "shell"
   }, /*#__PURE__*/React.createElement("nav", {
@@ -308,7 +310,7 @@ function App() {
   }, /*#__PURE__*/React.createElement("div", {
     className: "topnav__inner"
   }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => setScreen('home'),
+    onClick: goHome,
     className: "topnav__logo"
   }, /*#__PURE__*/React.createElement(Logo, {
     size: 26
@@ -327,7 +329,7 @@ function App() {
     className: "tab",
     "data-active": screen === id,
     onClick: () => {
-      setScreen(id);
+      setScreen(isBranchStaff && id === 'home' ? 'branch-orders' : id);
       window.scrollTo({
         top: 0,
         behavior: 'auto'
@@ -451,7 +453,7 @@ function App() {
     key: id,
     "data-active": screen === id,
     onClick: () => {
-      setScreen(id);
+      setScreen(isBranchStaff && id === 'home' ? 'branch-orders' : id);
       window.scrollTo({
         top: 0
       });
@@ -487,7 +489,7 @@ function App() {
     label: "Quick jump"
   }), /*#__PURE__*/React.createElement(TweakButton, {
     label: "Home",
-    onClick: () => setScreen('home')
+    onClick: goHome
   }), /*#__PURE__*/React.createElement(TweakButton, {
     label: "Menu",
     onClick: () => setScreen('menu')

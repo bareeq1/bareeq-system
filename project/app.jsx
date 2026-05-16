@@ -250,16 +250,19 @@ function App() {
   const openProduct = (item) => setOpenedItem(item);
   const cartCount = cart.reduce((s, c) => s + c.qty, 0);
   const displayName = user?.fullName || 'Guest';
+  const isBranchStaff = user?.role === 'BranchStaff';
+  const goHome = () => setScreen(isBranchStaff ? 'branch-orders' : 'home');
 
   return (
     <div className="shell">
       {/* TOP NAV */}
       <nav className="topnav">
         <div className="topnav__inner">
-          <button onClick={() => setScreen('home')} className="topnav__logo">
+          <button onClick={goHome} className="topnav__logo">
             <Logo size={26} />
           </button>
           <div className="topnav__center">
+<<<<<<< HEAD
             {user?.role === 'BranchStaff' ? (
               <>
                 <button className="tab" data-active={screen === 'kds-board'}
@@ -280,6 +283,19 @@ function App() {
                 </button>
               ))
             )}
+=======
+            {[
+              ['home',      tr('nav.home')],
+              ['menu',      tr('nav.menu')],
+              ['rewards',   tr('nav.rewards')],
+              ['dashboard', tr('nav.account')],
+            ].map(([id, label]) => (
+              <button key={id} className="tab" data-active={screen === id}
+                onClick={() => { setScreen(isBranchStaff && id === 'home' ? 'branch-orders' : id); window.scrollTo({ top: 0, behavior: 'auto' }); }}>
+                {label}
+              </button>
+            ))}
+>>>>>>> 8c140b65f15322f62601eec2d1ff76fd798f68fa
           </div>
           <div className="topnav__right">
             <button
@@ -339,7 +355,7 @@ function App() {
           ['rewards',   tr('nav.rewards'), '✦'],
           ['dashboard', tr('nav.account'), '◔'],
         ].map(([id, label, glyph]) => (
-          <button key={id} data-active={screen === id} onClick={() => { setScreen(id); window.scrollTo({ top: 0 }); }}>
+          <button key={id} data-active={screen === id} onClick={() => { setScreen(isBranchStaff && id === 'home' ? 'branch-orders' : id); window.scrollTo({ top: 0 }); }}>
             <span className="glyph">{glyph}</span>
             <span>{label}</span>
           </button>
@@ -360,7 +376,7 @@ function App() {
             { value: 'midnight', label: 'Night' },
           ]} />
         <TweakSection label="Quick jump" />
-        <TweakButton label="Home"    onClick={() => setScreen('home')} />
+        <TweakButton label="Home"    onClick={goHome} />
         <TweakButton label="Menu"    onClick={() => setScreen('menu')} />
         <TweakButton label="Rewards" onClick={() => setScreen('rewards')} />
         <TweakButton label="Account" onClick={() => setScreen('dashboard')} />
