@@ -262,28 +262,6 @@ function App() {
             <Logo size={26} />
           </button>
           <div className="topnav__center">
-<<<<<<< HEAD
-            {user?.role === 'BranchStaff' ? (
-              <>
-                <button className="tab" data-active={screen === 'kds-board'}
-                  onClick={() => setScreen('kds-board')}>KDS Board</button>
-                <button className="tab" data-active={screen === 'new-order'}
-                  onClick={() => setScreen('new-order')}>New Order</button>
-              </>
-            ) : (
-              [
-                ['home',      tr('nav.home')],
-                ['menu',      tr('nav.menu')],
-                ['rewards',   tr('nav.rewards')],
-                ['dashboard', tr('nav.account')],
-              ].map(([id, label]) => (
-                <button key={id} className="tab" data-active={screen === id}
-                  onClick={() => { setScreen(id); window.scrollTo({ top: 0, behavior: 'auto' }); }}>
-                  {label}
-                </button>
-              ))
-            )}
-=======
             {[
               ['home',      tr('nav.home')],
               ['menu',      tr('nav.menu')],
@@ -295,7 +273,6 @@ function App() {
                 {label}
               </button>
             ))}
->>>>>>> 8c140b65f15322f62601eec2d1ff76fd798f68fa
           </div>
           <div className="topnav__right">
             <button
