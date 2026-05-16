@@ -53,6 +53,15 @@ body { font-size: 14.5px; }
 }
 .shell { padding-bottom: 72px; }
 
+/* .wrap / .wrap-wide used directly as a grid — collapse on mobile */
+.wrap[style*="grid-template-columns: 1.4fr 1fr"],
+.wrap[style*="grid-template-columns: 1fr 1fr"],
+.wrap-wide[style*="grid-template-columns: 1.4fr 1fr"],
+.wrap-wide[style*="grid-template-columns: 1fr 1fr"] {
+  grid-template-columns: 1fr !important;
+  gap: 24px !important;
+}
+
 /* HEROES — collapse to single column, scale type */
 section[style*="grid-template-columns: 1.05fr 1fr"],
 section[style*="grid-template-columns: 1.2fr 1fr"],
@@ -172,13 +181,48 @@ section[style*="padding: 50px 0 30px"] > .wrap > div[style*="gap: 22px"]:last-ch
 }
 
 /* ORDERS TABLE → cards */
-.card > div[style*="grid-template-columns: 110px 2fr 1fr 90px 90px 110px"] {
+.card > div[style*="grid-template-columns: 110px 2fr 1fr 90px 90px 100px"] {
   grid-template-columns: 1fr 1fr !important;
   row-gap: 8px !important;
   padding: 16px !important;
 }
-.card > div[style*="grid-template-columns: 110px 2fr 1fr 90px 90px 110px"]:first-child {
+.card > div[style*="grid-template-columns: 110px 2fr 1fr 90px 90px 100px"]:first-child {
   display: none !important;
+}
+
+/* DASHBOARD TAB BAR — swipeable horizontal scroll */
+div[style*="border-bottom: 1px solid var(--rule)"][style*="background: var(--paper)"] > .wrap {
+  overflow-x: auto !important;
+  flex-wrap: nowrap !important;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+div[style*="border-bottom: 1px solid var(--rule)"][style*="background: var(--paper)"] > .wrap::-webkit-scrollbar {
+  display: none;
+}
+div[style*="border-bottom: 1px solid var(--rule)"][style*="background: var(--paper)"] > .wrap .tab {
+  flex-shrink: 0;
+}
+
+/* Overview recent-orders inner row */
+div[style*="grid-template-columns: 90px 1fr auto auto"] {
+  grid-template-columns: 1fr auto !important;
+  row-gap: 4px !important;
+}
+div[style*="grid-template-columns: 90px 1fr auto auto"] > div:first-child {
+  grid-column: span 2;
+  font-size: 10px !important;
+}
+
+/* Coupon left tab — narrower on mobile */
+div[style*="align-items: stretch"][style*="border-radius: 18px"] > div[style*="width: 160px"] {
+  width: 80px !important;
+  padding: 10px 8px !important;
+}
+div[style*="align-items: stretch"][style*="border-radius: 18px"] > div[style*="width: 160px"] .serif[style*="22px"] {
+  font-size: 14px !important;
 }
 
 /* MENU FILTER BAR — full width search + horizontal chip scroll */
@@ -251,6 +295,33 @@ footer .wrap[style*="justify-content: space-between"][style*="padding-top: 24px"
   .topnav__right .btn { display: inline-flex !important; }
   .topnav__right .icon-btn[title="Wishlist"] { display: inline-grid !important; }
 
+  /* Restore .wrap grids at tablet */
+  .wrap[style*="grid-template-columns: 1.4fr 1fr"],
+  .wrap[style*="grid-template-columns: 1fr 1fr"],
+  .wrap-wide[style*="grid-template-columns: 1.4fr 1fr"],
+  .wrap-wide[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 40px !important;
+  }
+
+  /* Restore overview mini-orders row at tablet */
+  div[style*="grid-template-columns: 90px 1fr auto auto"] {
+    grid-template-columns: 90px 1fr auto auto !important;
+  }
+  div[style*="grid-template-columns: 90px 1fr auto auto"] > div:first-child {
+    grid-column: auto;
+    font-size: inherit !important;
+  }
+
+  /* Restore coupon sidebar at tablet */
+  div[style*="align-items: stretch"][style*="border-radius: 18px"] > div[style*="width: 160px"] {
+    width: 160px !important;
+    padding: 16px !important;
+  }
+  div[style*="align-items: stretch"][style*="border-radius: 18px"] > div[style*="width: 160px"] .serif[style*="22px"] {
+    font-size: 22px !important;
+  }
+
   /* TWO-COL HEROES come back as 2col but lower font */
   .wrap > div[style*="grid-template-columns: 1.05fr 1fr"],
   .wrap-wide > div[style*="grid-template-columns: 1.05fr 1fr"],
@@ -293,10 +364,10 @@ footer .wrap[style*="justify-content: space-between"][style*="padding-top: 24px"
 
   /* tier ladder + badges 4-up at tablet too crowded → keep 2 */
   /* allow refresh on tablet */
-  div[style*="grid-template-columns: 110px 2fr 1fr 90px 90px 110px"]:first-child {
+  div[style*="grid-template-columns: 110px 2fr 1fr 90px 90px 100px"]:first-child {
     display: grid !important;
   }
-  .card > div[style*="grid-template-columns: 110px 2fr 1fr 90px 90px 110px"] {
+  .card > div[style*="grid-template-columns: 110px 2fr 1fr 90px 90px 100px"] {
     grid-template-columns: 80px 1fr 100px 70px 70px 80px !important;
     padding: 14px 18px !important;
   }
@@ -376,8 +447,8 @@ footer .wrap[style*="justify-content: space-between"][style*="padding-top: 24px"
   }
 
   /* orders table back to full */
-  .card > div[style*="grid-template-columns: 110px 2fr 1fr 90px 90px 110px"] {
-    grid-template-columns: 110px 2fr 1fr 90px 90px 110px !important;
+  .card > div[style*="grid-template-columns: 110px 2fr 1fr 90px 90px 100px"] {
+    grid-template-columns: 110px 2fr 1fr 90px 90px 100px !important;
     padding: 20px 28px !important;
   }
 
