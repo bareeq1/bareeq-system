@@ -2,7 +2,7 @@
 //  ADMIN — Payment review grid + approve/reject modal
 // ============================================================
 
-function AdminPaymentReviewScreen({ go, token }) {
+function AdminPaymentReviewScreen({ go, token, asTab }) {
   const { t } = useI18n();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,56 +51,41 @@ function AdminPaymentReviewScreen({ go, token }) {
     }
   };
 
-  return (
-    <div className="screen">
-      <section style={{ background: 'var(--cream)', padding: '40px 0 30px', borderBottom: '1px solid var(--rule)' }}>
-        <div className="wrap" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div>
-            <button onClick={() => go('dashboard')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--ink-mute)', marginBottom: 14, padding: 0 }}>
-              ← Dashboard
-            </button>
-            <Eyebrow gold>{t('adminPayment.kicker')}</Eyebrow>
-            <h1 className="serif" style={{ margin: '10px 0 0', fontSize: 52, lineHeight: 1, letterSpacing: '-0.02em' }}>
-              {t('adminPayment.title')}
-            </h1>
+  const content = (
+    <React.Fragment>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 24 }}>
+        <button className="btn btn--ghost btn--sm" onClick={load}>{t('adminPayment.refresh')}</button>
+      </div>
+
+      {loading && <div style={{ color: 'var(--ink-mute)', padding: '32px 0', fontSize: 14 }}>Loading…</div>}
+
+      {!loading && orders.length === 0 && (
+        <div style={{ padding: '32px 0', color: 'var(--ink-mute)', fontSize: 14 }}>{t('adminPayment.empty')}</div>
+      )}
+
+      {orders.length > 0 && (
+        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '110px 1fr 120px 110px 120px', padding: '14px 28px', background: 'var(--ivory-2)', borderBottom: '1px solid var(--rule)' }}>
+            {['Order', 'Customer', 'Branch', 'Total', 'Action'].map(h => (
+              <div key={h} className="eyebrow">{h}</div>
+            ))}
           </div>
-          <button className="btn btn--ghost btn--sm" onClick={load}>{t('adminPayment.refresh')}</button>
-        </div>
-      </section>
-
-      <section style={{ padding: '40px 0 120px' }}>
-        <div className="wrap">
-          {loading && <div style={{ color: 'var(--ink-mute)', padding: '32px 0', fontSize: 14 }}>Loading…</div>}
-
-          {!loading && orders.length === 0 && (
-            <div style={{ padding: '32px 0', color: 'var(--ink-mute)', fontSize: 14 }}>{t('adminPayment.empty')}</div>
-          )}
-
-          {orders.length > 0 && (
-            <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '110px 1fr 120px 110px 120px', padding: '14px 28px', background: 'var(--ivory-2)', borderBottom: '1px solid var(--rule)' }}>
-                {['Order', 'Customer', 'Branch', 'Total', 'Action'].map(h => (
-                  <div key={h} className="eyebrow">{h}</div>
-                ))}
+          {orders.map((o, i) => {
+            const oid = o.id || o.orderId || '';
+            return (
+              <div key={oid} style={{ display: 'grid', gridTemplateColumns: '110px 1fr 120px 110px 120px', padding: '18px 28px', alignItems: 'center', borderBottom: i < orders.length - 1 ? '1px solid var(--rule)' : 'none' }}>
+                <div className="mono" style={{ fontSize: 11, letterSpacing: '0.12em' }}>BR-{oid.slice(0, 4).toUpperCase()}</div>
+                <div style={{ fontSize: 14 }}>{o.customerName || o.customer || '—'}</div>
+                <div style={{ fontSize: 13, color: 'var(--ink-mute)' }}>{o.branchLabel || o.branch || '—'}</div>
+                <Price value={o.total || 0} size={13} />
+                <button className="btn btn--ink btn--sm" onClick={() => openDetail(oid)}>
+                  {t('adminPayment.review')}
+                </button>
               </div>
-              {orders.map((o, i) => {
-                const oid = o.id || o.orderId || '';
-                return (
-                  <div key={oid} style={{ display: 'grid', gridTemplateColumns: '110px 1fr 120px 110px 120px', padding: '18px 28px', alignItems: 'center', borderBottom: i < orders.length - 1 ? '1px solid var(--rule)' : 'none' }}>
-                    <div className="mono" style={{ fontSize: 11, letterSpacing: '0.12em' }}>BR-{oid.slice(0, 4).toUpperCase()}</div>
-                    <div style={{ fontSize: 14 }}>{o.customerName || o.customer || '—'}</div>
-                    <div style={{ fontSize: 13, color: 'var(--ink-mute)' }}>{o.branchLabel || o.branch || '—'}</div>
-                    <Price value={o.total || 0} size={13} />
-                    <button className="btn btn--ink btn--sm" onClick={() => openDetail(oid)}>
-                      {t('adminPayment.review')}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+            );
+          })}
         </div>
-      </section>
+      )}
 
       {/* REVIEW MODAL */}
       <Modal open={!!selected} onClose={() => setSelected(null)} width={580}>
@@ -170,6 +155,31 @@ function AdminPaymentReviewScreen({ go, token }) {
           )}
         </div>
       </Modal>
+    </React.Fragment>
+  );
+
+  if (asTab) return content;
+
+  return (
+    <div className="screen">
+      <section style={{ background: 'var(--cream)', padding: '40px 0 30px', borderBottom: '1px solid var(--rule)' }}>
+        <div className="wrap" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+          <div>
+            <button onClick={() => go('admin-dashboard')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--ink-mute)', marginBottom: 14, padding: 0 }}>
+              ← Dashboard
+            </button>
+            <Eyebrow gold>{t('adminPayment.kicker')}</Eyebrow>
+            <h1 className="serif" style={{ margin: '10px 0 0', fontSize: 52, lineHeight: 1, letterSpacing: '-0.02em' }}>
+              {t('adminPayment.title')}
+            </h1>
+          </div>
+        </div>
+      </section>
+      <section style={{ padding: '40px 0 120px' }}>
+        <div className="wrap">
+          {content}
+        </div>
+      </section>
     </div>
   );
 }

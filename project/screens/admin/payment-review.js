@@ -4,7 +4,8 @@
 
 function AdminPaymentReviewScreen({
   go,
-  token
+  token,
+  asTab
 }) {
   const {
     t
@@ -54,52 +55,16 @@ function AdminPaymentReviewScreen({
       setBusy(false);
     }
   };
-  return /*#__PURE__*/React.createElement("div", {
-    className: "screen"
-  }, /*#__PURE__*/React.createElement("section", {
-    style: {
-      background: 'var(--cream)',
-      padding: '40px 0 30px',
-      borderBottom: '1px solid var(--rule)'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "wrap",
+  const content = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'flex-end'
+      justifyContent: 'flex-end',
+      marginBottom: 24
     }
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
-    onClick: () => go('dashboard'),
-    style: {
-      background: 'none',
-      border: 'none',
-      cursor: 'pointer',
-      fontSize: 13,
-      color: 'var(--ink-mute)',
-      marginBottom: 14,
-      padding: 0
-    }
-  }, "\u2190 Dashboard"), /*#__PURE__*/React.createElement(Eyebrow, {
-    gold: true
-  }, t('adminPayment.kicker')), /*#__PURE__*/React.createElement("h1", {
-    className: "serif",
-    style: {
-      margin: '10px 0 0',
-      fontSize: 52,
-      lineHeight: 1,
-      letterSpacing: '-0.02em'
-    }
-  }, t('adminPayment.title'))), /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement("button", {
     className: "btn btn--ghost btn--sm",
     onClick: load
-  }, t('adminPayment.refresh')))), /*#__PURE__*/React.createElement("section", {
-    style: {
-      padding: '40px 0 120px'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "wrap"
-  }, loading && /*#__PURE__*/React.createElement("div", {
+  }, t('adminPayment.refresh'))), loading && /*#__PURE__*/React.createElement("div", {
     style: {
       color: 'var(--ink-mute)',
       padding: '32px 0',
@@ -161,7 +126,7 @@ function AdminPaymentReviewScreen({
       className: "btn btn--ink btn--sm",
       onClick: () => openDetail(oid)
     }, t('adminPayment.review')));
-  })))), /*#__PURE__*/React.createElement(Modal, {
+  })), /*#__PURE__*/React.createElement(Modal, {
     open: !!selected,
     onClose: () => setSelected(null),
     width: 580
@@ -291,6 +256,50 @@ function AdminPaymentReviewScreen({
       opacity: busy ? 0.6 : 1
     }
   }, t('adminPayment.reject')))))));
+  if (asTab) return content;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "screen"
+  }, /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--cream)',
+      padding: '40px 0 30px',
+      borderBottom: '1px solid var(--rule)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap",
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'flex-end'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+    onClick: () => go('admin-dashboard'),
+    style: {
+      background: 'none',
+      border: 'none',
+      cursor: 'pointer',
+      fontSize: 13,
+      color: 'var(--ink-mute)',
+      marginBottom: 14,
+      padding: 0
+    }
+  }, "\u2190 Dashboard"), /*#__PURE__*/React.createElement(Eyebrow, {
+    gold: true
+  }, t('adminPayment.kicker')), /*#__PURE__*/React.createElement("h1", {
+    className: "serif",
+    style: {
+      margin: '10px 0 0',
+      fontSize: 52,
+      lineHeight: 1,
+      letterSpacing: '-0.02em'
+    }
+  }, t('adminPayment.title'))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      padding: '40px 0 120px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, content)));
 }
 Object.assign(window, {
   AdminPaymentReviewScreen
